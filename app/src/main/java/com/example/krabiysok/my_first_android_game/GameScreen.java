@@ -20,28 +20,21 @@ public class GameScreen extends SurfaceView {
     private Point displayParameters;
     private Bitmap backGround;
 
-    public GameScreen(Context context, int backGroundID) {
+    public GameScreen(Context context) {
         super(context);
         sView = this;
         displayParameters = new Point();
         ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).
                 getDefaultDisplay().getSize(displayParameters);
-        isHeightMax = displayParameters.x > displayParameters.y;
-        backGround = BitmapFactory.decodeResource(context.getResources(), backGroundID);
+        isHeightMax = displayParameters.y > displayParameters.x;
         sView.getHolder().addCallback(new SurfaceHolder.Callback() {
             public void surfaceDestroyed(SurfaceHolder holder) {
             }
 
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                if (!isHeightMax) {
-                    int p = displayParameters.x;
-                    displayParameters.x = displayParameters.y;
-                    displayParameters.y = p;
-                }
                 sView.getLayoutParams().height = displayParameters.y;
                 sView.getLayoutParams().width = displayParameters.x;
-                draw(getCanvas());
             }
 
             @Override
@@ -51,17 +44,37 @@ public class GameScreen extends SurfaceView {
         });
     }
 
+    public SurfaceView getsView() {
+        return sView;
+    }
+
+    public Point getDisplayParameters() {
+        return displayParameters;
+    }
+
     public Canvas getCanvas() {
         Canvas canva = sView.getHolder().lockCanvas();
-        if (canva != null) {
+        if (canva != null && backGround != null) {
             canva.drawBitmap(backGround, null, new Rect(0,
                 0, sView.getLayoutParams().width, sView.getLayoutParams().height), null);
         }
         return canva;
     }
 
+    public Bitmap getBackGround() {
+        return backGround;
+    }
+
+    public void setBackGround(Bitmap backGround) {
+        this.backGround = backGround;
+    }
+
     public void draw(Canvas canva) {
         if (canva != null)
             sView.getHolder().unlockCanvasAndPost(canva);
+    }
+
+    public boolean isHeightMax() {
+        return isHeightMax;
     }
 }

@@ -2,6 +2,7 @@ package com.example.krabiysok.my_first_android_game;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -19,11 +20,15 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        Log.d("LogApp", "create");
+        if (gameScreen == null)
+            gameScreen = new GameScreen(this);
+        if (gameScreen.isHeightMax())
+            // Call onCreate again
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        gameScreen = new GameScreen(this, R.drawable.lighthouse);
         setContentView(gameScreen);
     }
 
@@ -31,9 +36,12 @@ public class MainActivity extends Activity {
     public void onWindowFocusChanged(boolean hasFocus) {
         //super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-            Log.d("LOG", "active");
+            Log.d("LogApp", "active");
+            gameScreen.setBackGround(new BitmapFactory().decodeResource(getResources(),
+                    R.drawable.lighthouse));
+            gameScreen.draw(gameScreen.getCanvas());
         } else {
-            Log.d("LOG", "disabled");
+            Log.d("LogApp", "disabled");
         }
     }
 }
