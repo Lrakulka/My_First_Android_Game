@@ -10,7 +10,7 @@ import android.graphics.Rect;
 /**
  * Created by KrabiySok on 12/30/2014.
  */
-public class Animation {
+public class GeneralAnimation {
     private int rows;
     private int columns ;
     private Bitmap playerBMP;
@@ -18,7 +18,7 @@ public class Animation {
     private int widthBMP, heightBMP, width, height;
     private byte forward, back, left, right;
 
-    Animation(Activity activity, int rows, int columns,
+    GeneralAnimation(Activity activity, int rows, int columns,
               int widthAnimRezol, int heightAnimRezol, int sprite) {
         this.rows = rows;
         this.columns = columns;
