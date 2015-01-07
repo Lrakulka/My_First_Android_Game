@@ -20,7 +20,7 @@ public class GeneralAnimation {
 
     GeneralAnimation(Activity activity, int rows, int columns,
               int widthAnimRezol, int heightAnimRezol, int sprite) {
-        this.rows = rows;
+       /* this.rows = rows;
         this.columns = columns;
         playerBMP = BitmapFactory.decodeResource(activity.getResources(), sprite);
         Point surfaceVSize = new
@@ -33,7 +33,7 @@ public class GeneralAnimation {
         src = new Rect();
         dst = new Rect(0, height - surfaceVSize.y, widthBMP, heightBMP);
         forward = back = left = right = 0;
-    }
+  */  }
 
     public void draw(Canvas canva, Point position, int moveAngle) {
         if (position != null)
