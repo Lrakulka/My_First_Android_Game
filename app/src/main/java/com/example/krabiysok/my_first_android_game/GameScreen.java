@@ -27,7 +27,8 @@ public class GameScreen extends SurfaceView {
         private Paint paint;
         private float rBig, rSmall, specialR, jumpR; // Joystick circle radius
         private float rBigD, jumpRD; // rBigD = rBig^2; jumpRD = jumpR^2
-        private float x, y, xDot, yDot; // Small circke I cold dot
+        private float x, y;
+        private Float xDot, yDot; // Small circke I cold dot
         private DashPathEffect dashPath;
 
         Joystick() {
