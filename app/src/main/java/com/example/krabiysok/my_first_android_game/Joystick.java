@@ -22,7 +22,7 @@ public class Joystick  {
     private SurfaceView stickSurfaceV, aimSurfaceV;
 
     private class Aim implements View.OnTouchListener {
-        private Float xAim, yAim;
+        private volatile Float xAim, yAim;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -31,7 +31,6 @@ public class Joystick  {
                 xAim = event.getX();
                 yAim = event.getY();
             } else xAim = yAim = null;
-            Log.d("Stick", String.valueOf(xAim));
             return true;
         }
 
@@ -132,15 +131,11 @@ public class Joystick  {
             canva.drawCircle(x, y, specialR, paint);
             paint.setPathEffect(null);
             stickSurfaceV.getHolder().unlockCanvasAndPost(canva);
-
-            Log.d("Stick", String.valueOf(stickInField()));
-            Log.d("Stick", String.valueOf(getDirectionStick()));
-            Log.d("Stick", "------");
             return true;
         }
 
         //-1 dot is not in circle 0 in circle 1 on circle
-        public Integer stickInField() {
+        public synchronized Integer stickInField() {
             if (xDotStick == null || yDotStick == null)
                 return null;
             float pos = (x - xDotStick) * (x - xDotStick) + (y - yDotStick) *

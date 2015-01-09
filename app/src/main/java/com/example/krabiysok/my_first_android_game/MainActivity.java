@@ -43,7 +43,6 @@ public class MainActivity extends Activity {
     public void onWindowFocusChanged(boolean hasFocus) {
         //super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
-
             Log.d("LogApp", "active");
         } else {
             Log.d("LogApp", "disabled");
