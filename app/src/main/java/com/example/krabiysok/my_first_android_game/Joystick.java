@@ -4,6 +4,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -35,6 +37,10 @@ public class Joystick  {
         private DashPathEffect dashPath;
 
         Stick() {
+            // Make surfaceView transparent
+            stickSurfaceV.setZOrderOnTop(true);    // necessary
+            stickSurfaceV.getHolder().setFormat(PixelFormat.TRANSPARENT);
+
             stickSurfaceV.getHolder().addCallback(new SurfaceHolder.Callback() {
 
                 @Override
@@ -78,7 +84,7 @@ public class Joystick  {
             } else xDotStick = yDotStick = null;
             Integer stickInField = stickInField();
             Canvas canva = stickSurfaceV.getHolder().lockCanvas();
-            canva.drawColor(Color.BLACK);
+            canva.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             canva.drawCircle(x, y, rBig, paint);
             canva.drawCircle(x, y, jumpR, paint);
             if (stickInField == null || stickInField == -1) {
@@ -92,6 +98,7 @@ public class Joystick  {
                     yDotStick = y + rBig * (yDotStick - y ) / dist;
                 }
                 canva.drawCircle(xDotStick, yDotStick, rSmall, paint);
+
             }
             paint.setPathEffect(dashPath);
             canva.drawCircle(x, y, specialR, paint);

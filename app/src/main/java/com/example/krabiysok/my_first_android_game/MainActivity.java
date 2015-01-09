@@ -5,6 +5,9 @@ import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Layout;
 import android.util.Log;
@@ -30,8 +33,7 @@ public class MainActivity extends Activity {
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setContentView(R.layout.main_layout);
-
-           // gameScreen = new GameScreen((SurfaceView) findViewById(R.id.gameScreen), this);
+            // gameScreen = new GameScreen((SurfaceView) findViewById(R.id.gameScreen), this);
             joystick = new Joystick((SurfaceView) findViewById(R.id.joystick),
                     (SurfaceView) findViewById(R.id.joystick));
         }
@@ -41,7 +43,12 @@ public class MainActivity extends Activity {
     public void onWindowFocusChanged(boolean hasFocus) {
         //super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
+
             Log.d("LogApp", "active");
+            SurfaceView c = (SurfaceView) findViewById(R.id.test);
+            Canvas p = c.getHolder().lockCanvas();
+            p.drawColor(Color.RED);
+            c.getHolder().unlockCanvasAndPost(p);
         } else {
             Log.d("LogApp", "disabled");
         }
