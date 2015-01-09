@@ -33,9 +33,9 @@ public class MainActivity extends Activity {
             this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setContentView(R.layout.main_layout);
-            // gameScreen = new GameScreen((SurfaceView) findViewById(R.id.gameScreen), this);
+            gameScreen = new GameScreen((SurfaceView) findViewById(R.id.gameScreen), this);
             joystick = new Joystick((SurfaceView) findViewById(R.id.joystick),
-                    (SurfaceView) findViewById(R.id.joystick));
+                    (SurfaceView) findViewById(R.id.gameScreen));
         }
     }
 
@@ -45,10 +45,6 @@ public class MainActivity extends Activity {
         if (hasFocus) {
 
             Log.d("LogApp", "active");
-            SurfaceView c = (SurfaceView) findViewById(R.id.test);
-            Canvas p = c.getHolder().lockCanvas();
-            p.drawColor(Color.RED);
-            c.getHolder().unlockCanvasAndPost(p);
         } else {
             Log.d("LogApp", "disabled");
         }

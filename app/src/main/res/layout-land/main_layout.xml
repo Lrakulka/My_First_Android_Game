@@ -5,37 +5,25 @@
 
 
     <SurfaceView
-        android:layout_width="400dp"
-        android:layout_height="400dp"
-        android:id="@+id/joystick"
-        android:layout_row="1"
-        android:layout_column="0"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
-    <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:id="@+id/imageView"
-        android:background="@drawable/gorilla"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-
-    <SurfaceView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:id="@+id/test"
+        android:id="@+id/gameScreen"
         android:layout_below="@+id/weapons"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
+
+    <SurfaceView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:id="@+id/joystick"
+        android:layout_row="1"
+        android:layout_column="0"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -45,7 +33,6 @@
         android:layout_alignParentEnd="true"
         android:layout_row="0"
         android:layout_column="2"
-        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 

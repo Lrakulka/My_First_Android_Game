@@ -27,7 +27,7 @@ public class GameScreen {
         this.context = context;
         this.windowSurface = windowSurface;
         windowSize = new Point();
-        /*windowSurface.getHolder().addCallback(new SurfaceHolder.Callback() {
+        windowSurface.getHolder().addCallback(new SurfaceHolder.Callback() {
             public void surfaceDestroyed(SurfaceHolder holder) {
             }
 
@@ -41,7 +41,7 @@ public class GameScreen {
             public void surfaceChanged(SurfaceHolder holder, int format, int width,
                                        int height) {
             }
-        });*/
+        });
     }
 
     public SurfaceView getsView() {

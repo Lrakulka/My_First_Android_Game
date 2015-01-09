@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.PorterDuff;
 import android.graphics.RectF;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -31,9 +32,11 @@ public class Joystick  {
     private class Stick implements View.OnTouchListener {
         private Paint paint;
         private Float xDotStick, yDotStick; // Small circke I cold dot
-        private float rBig, rSmall, specialR, jumpR; // Joystick circle radius
+        // Joystick circle radius
+        private float rBig, rSmall, specialR, jumpR, maxDotDistance;
         private float rBigD, jumpRD; // rBigD = rBig^2; jumpRD = jumpR^2
         private float x, y;
+        private static final double PI2 = Math.PI * 2;
         private DashPathEffect dashPath;
 
         Stick() {
@@ -45,18 +48,24 @@ public class Joystick  {
 
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
+                    if (aimSurfaceV.getHeight() > 0)
+                        stickSurfaceV.getLayoutParams().height =
+                            stickSurfaceV.getLayoutParams().width = (int)
+                                   (aimSurfaceV.getHeight() / 3.5);
+                    else stickSurfaceV.getLayoutParams().height =
+                            stickSurfaceV.getLayoutParams().width = 200;
                     paint = new Paint(Paint.ANTI_ALIAS_FLAG);
                     paint.setColor(Color.BLUE);
-                    paint.setAlpha(100);
+                    paint.setAlpha(150);
                     paint.setStyle(Paint.Style.STROKE);
                     paint.setStrokeWidth(stickSurfaceV.getHeight() / 20);
                     dashPath = new DashPathEffect(new float[] { 5, 10, 5, 5 }, 1);
-                    rBig = stickSurfaceV.getHeight() / 4;
-                    rSmall = stickSurfaceV.getHeight() / 8;
-                    x = stickSurfaceV.getHeight() / 2;
-                    y = stickSurfaceV.getWidth() / 2;
+                    x = y = jumpR = stickSurfaceV.getHeight() / 2;
+                    jumpR -= paint.getStrokeWidth() / 2;
+                    rBig = (float) (jumpR / 1.7);
+                    rSmall = rBig / 2;
                     specialR = (float)(rBig - paint.getStrokeWidth() / 1.5);
-                    jumpR = rBig + rSmall;
+                    maxDotDistance = (float) (rBig * 0.8);
                     rBigD = rBig * rBig;
                     jumpRD = jumpR * jumpR;
                     onTouch(null, null);
@@ -78,32 +87,40 @@ public class Joystick  {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if (event != null) {
+            if (event != null && event.getAction() != MotionEvent.ACTION_UP &&
+                    event.getAction() != MotionEvent.ACTION_CANCEL) {
                 xDotStick = event.getX();
                 yDotStick = event.getY();
             } else xDotStick = yDotStick = null;
             Integer stickInField = stickInField();
             Canvas canva = stickSurfaceV.getHolder().lockCanvas();
+            // Clean canvas
             canva.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
             canva.drawCircle(x, y, rBig, paint);
             canva.drawCircle(x, y, jumpR, paint);
             if (stickInField == null || stickInField == -1) {
                 canva.drawCircle(x, y, rSmall, paint);
+                xDotStick = yDotStick = null;
             }
             else {
+                Float xDot = xDotStick, yDot = yDotStick;
                 if (stickInField == 1) {
                     float dist = (float) (Math.pow(Math.pow(xDotStick - x, 2) +
                             Math.pow(yDotStick - y, 2), 0.5));
-                    xDotStick = x + rBig * (xDotStick - x ) / dist;
-                    yDotStick = y + rBig * (yDotStick - y ) / dist;
+                    xDot = x + maxDotDistance * (xDotStick - x ) / dist;
+                    yDot = y + maxDotDistance * (yDotStick - y ) / dist;
                 }
-                canva.drawCircle(xDotStick, yDotStick, rSmall, paint);
+                canva.drawCircle(xDot, yDot, rSmall, paint);
 
             }
             paint.setPathEffect(dashPath);
             canva.drawCircle(x, y, specialR, paint);
             paint.setPathEffect(null);
             stickSurfaceV.getHolder().unlockCanvasAndPost(canva);
+
+            Log.d("Stick", String.valueOf(stickInField()));
+            Log.d("Stick", String.valueOf(getDirectionStick()));
+            Log.d("Stick", "------");
             return true;
         }
 
@@ -125,10 +142,10 @@ public class Joystick  {
                 return null;
             double a = Math.pow(Math.pow(x - xDotStick, 2) + Math.pow(y - yDotStick, 2), 0.5),
                     c = Math.pow(Math.pow(x - xDotStick, 2) + Math.pow(y - rBig - yDotStick, 2), 0.5);
-            Double result = xDotStick < x ? Math.PI + Math.acos((a * a + rBig * rBig -
+            Double result = xDotStick < x ? PI2 - Math.acos((a * a + rBig * rBig -
                     c * c) / (2 * a * rBig)) : Math.acos((a * a + rBig * rBig - c * c) /
                     (2 * a * rBig));
-            return result;
+            return result * (180 / Math.PI);
         }
 
         public void cleanStickPosition() {
