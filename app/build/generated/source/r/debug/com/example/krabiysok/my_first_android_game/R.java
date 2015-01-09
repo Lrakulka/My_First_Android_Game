@@ -1318,7 +1318,7 @@ containing a value of this type.
         public static final int action_mode_bar=0x7f08002e;
         public static final int action_mode_bar_stub=0x7f08002d;
         public static final int action_mode_close_button=0x7f080020;
-        public static final int action_settings=0x7f080043;
+        public static final int action_settings=0x7f080042;
         public static final int activity_chooser_view_content=0x7f080021;
         public static final int always=0x7f080016;
         public static final int beginning=0x7f080013;
@@ -1333,14 +1333,13 @@ containing a value of this type.
         public static final int end=0x7f080014;
         public static final int expand_activities_button=0x7f080022;
         public static final int expanded_menu=0x7f080028;
-        public static final int gameScreen=0x7f08003f;
         public static final int healthAndEnerge=0x7f080041;
         public static final int home=0x7f080004;
         public static final int homeAsUp=0x7f08000d;
         public static final int icon=0x7f080026;
         public static final int ifRoom=0x7f080018;
         public static final int image=0x7f080023;
-        public static final int joystick=0x7f080040;
+        public static final int joystick=0x7f08003f;
         public static final int listMode=0x7f080009;
         public static final int list_item=0x7f080025;
         public static final int middle=0x7f080015;
@@ -1370,7 +1369,7 @@ containing a value of this type.
         public static final int title=0x7f080027;
         public static final int up=0x7f080008;
         public static final int useLogo=0x7f080012;
-        public static final int weapons=0x7f080042;
+        public static final int weapons=0x7f080040;
         public static final int withText=0x7f08001a;
         public static final int wrap_content=0x7f08001d;
     }

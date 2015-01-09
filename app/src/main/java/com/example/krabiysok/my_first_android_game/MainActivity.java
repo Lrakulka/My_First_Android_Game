@@ -17,16 +17,24 @@ import android.view.WindowManager;
 
 
 public class MainActivity extends Activity {
-    SurfaceView gameScreen;
+    GameScreen gameScreen;
+    Joystick joystick;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.main_layout);
+        if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        else {
+            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            setContentView(R.layout.main_layout);
+
+           // gameScreen = new GameScreen((SurfaceView) findViewById(R.id.gameScreen), this);
+            joystick = new Joystick((SurfaceView) findViewById(R.id.joystick),
+                    (SurfaceView) findViewById(R.id.joystick));
+        }
     }
 
     @Override
@@ -34,25 +42,6 @@ public class MainActivity extends Activity {
         //super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             Log.d("LogApp", "active");
-            gameScreen = (SurfaceView) this.findViewById(R.id.gameScreen);
-            Canvas c = gameScreen.getHolder().lockCanvas();
-            c.drawColor(Color.RED);
-            gameScreen.getHolder().unlockCanvasAndPost(c);
-            gameScreen.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    Log.d("LogApp", "Game screen");
-                    return false;
-                }
-            });
-            SurfaceView joy = (SurfaceView) findViewById(R.id.joystick);
-            joy.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    Log.d("LogApp", "Joysteck");
-                    return false;
-                }
-            });
         } else {
             Log.d("LogApp", "disabled");
         }
