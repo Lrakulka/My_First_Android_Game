@@ -22,10 +22,25 @@ public class Joystick  {
     private SurfaceView stickSurfaceV, aimSurfaceV;
 
     private class Aim implements View.OnTouchListener {
+        private Float xAim, yAim;
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            return false;
+            if (event != null && event.getAction() != MotionEvent.ACTION_UP &&
+                    event.getAction() != MotionEvent.ACTION_CANCEL) {
+                xAim = event.getX();
+                yAim = event.getY();
+            } else xAim = yAim = null;
+            Log.d("Stick", String.valueOf(xAim));
+            return true;
+        }
+
+        public Float getxAim() {
+            return xAim;
+        }
+
+        public Float getyAim() {
+            return yAim;
         }
     }
 
@@ -58,9 +73,9 @@ public class Joystick  {
                     paint.setColor(Color.BLUE);
                     paint.setAlpha(150);
                     paint.setStyle(Paint.Style.STROKE);
-                    paint.setStrokeWidth(stickSurfaceV.getHeight() / 20);
+                    paint.setStrokeWidth(stickSurfaceV.getLayoutParams().height / 20);
                     dashPath = new DashPathEffect(new float[] { 5, 10, 5, 5 }, 1);
-                    x = y = jumpR = stickSurfaceV.getHeight() / 2;
+                    x = y = jumpR = stickSurfaceV.getLayoutParams().height / 2;
                     jumpR -= paint.getStrokeWidth() / 2;
                     rBig = (float) (jumpR / 1.7);
                     rSmall = rBig / 2;
@@ -145,12 +160,13 @@ public class Joystick  {
             Double result = xDotStick < x ? PI2 - Math.acos((a * a + rBig * rBig -
                     c * c) / (2 * a * rBig)) : Math.acos((a * a + rBig * rBig - c * c) /
                     (2 * a * rBig));
-            return result * (180 / Math.PI);
+            return result;
         }
 
         public void cleanStickPosition() {
             xDotStick = yDotStick = null;
         }
+
     }
 
     Joystick(SurfaceView stickSurfaceV, SurfaceView aimSurfaceV) {
