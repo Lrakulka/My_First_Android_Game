@@ -7,46 +7,62 @@ import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 
+import com.example.krabiysok.my_first_android_game.GameScreen;
+
 /**
  * Created by KrabiySok on 12/30/2014.
  */
 public class GeneralAnimation {
     private int rows;
     private int columns ;
-    private Bitmap playerBMP;
+    private Bitmap sprite;
     private Rect src, dst;
-    private int widthBMP, heightBMP, width, height;
+    private Point bmpRezolution, spriteRezolution, position;
     private byte forward, back, left, right;
+    private static final double angle45 = Math.PI / 4, angle135 = Math.PI - angle45,
+        angle225 = Math.PI + angle45, angle315 = Math.PI + 2 * angle45;
 
-    GeneralAnimation(Activity activity, int rows, int columns,
-              int widthAnimRezol, int heightAnimRezol, int sprite) {
-       /* this.rows = rows;
+    GeneralAnimation(int x, int y, int rows, int columns, Bitmap sprite,
+                     Point spriteRezolution) {
+        this.rows = rows;
         this.columns = columns;
-        playerBMP = BitmapFactory.decodeResource(activity.getResources(), sprite);
-        Point surfaceVSize = new
-                Point(activity.findViewById(R.id.surfaceView).getHeight(),
-                activity.findViewById(R.id.surfaceView).getWidth());
-        widthBMP = playerBMP.getWidth() / columns;
-        heightBMP = playerBMP.getHeight() / rows;
-        width = widthBMP * (surfaceVSize.x / widthBMP / widthAnimRezol);
-        height = heightBMP * (surfaceVSize.y / heightBMP / heightAnimRezol);
-        src = new Rect();
-        dst = new Rect(0, height - surfaceVSize.y, widthBMP, heightBMP);
+        this.sprite = sprite;
+        bmpRezolution = new Point(sprite.getWidth() / columns,
+                sprite.getHeight() / rows);
+        position = new Point(x, y);
+        if (spriteRezolution != null)
+            this.spriteRezolution = spriteRezolution;
+        else {
+            this.spriteRezolution = new Point (bmpRezolution.x, bmpRezolution.y);
+        }
+        double height = (GameScreen.getWindowSize().x / 6) / bmpRezolution.x,
+                weight = (GameScreen.getWindowSize().y / 6) / bmpRezolution.y;
+        if (height <= 1 && weight <= 1)
+            height = weight = height > weight ? height : weight;
+        else height = weight = 1 / (height > weight ? height : weight);
+        spriteRezolution.set((int) (spriteRezolution.y * height),
+                (int) (spriteRezolution.x * weight));
+        src = new Rect(0, 0, bmpRezolution.x, bmpRezolution.y);
+        dst = new Rect(position.x, position.y, position.x + spriteRezolution.x,
+                position.y + spriteRezolution.y);
         forward = back = left = right = 0;
-  */  }
+    }
 
-    public void draw(Canvas canva, Point position, int moveAngle) {
-        if (position != null)
-            dst.set(position.x, position.y, position.x + width, position.y + height);
-        if (moveAngle > 315 || moveAngle <= 45)
+    public void draw(Canvas canva, Point position, Double moveAngle) {
+        if (position != null) {
+            this.position = position;
+            dst.set(position.x, position.y, position.x + spriteRezolution.x,
+                    position.y + spriteRezolution.y);
+        }
+        if (moveAngle == null || moveAngle > angle315 || moveAngle <= angle45)
             moveBack();
-        else if (moveAngle > 45 && moveAngle <= 135)
+        else if (moveAngle > angle45 && moveAngle <= angle135)
                 moveRight();
-            else if (moveAngle > 135 && moveAngle <= 225)
+            else if (moveAngle > angle135 && moveAngle <= angle225)
                     moveForward();
-                else if (moveAngle > 225 && moveAngle <= 315)
+                else if (moveAngle > angle225 && moveAngle <= angle315)
                         moveLeft();
-        canva.drawBitmap(playerBMP, src, this.dst, null);
+        canva.drawBitmap(sprite, src, this.dst, null);
     }
 
     private void moveForward() {
@@ -54,7 +70,8 @@ public class GeneralAnimation {
         if ( forward < columns) {
             forward = 0;
         }
-        src.set(forward * width, 0, (forward + 1) * width, height);
+        src.set(forward * bmpRezolution.x, 0,
+                (forward + 1) * bmpRezolution.x, bmpRezolution.y);
         forward++;
     }
 
@@ -63,7 +80,8 @@ public class GeneralAnimation {
         if ( left < columns) {
             left = 0;
         }
-        src.set(left * width, height, (left + 1) * width, height * 2);
+        src.set(left * bmpRezolution.x, bmpRezolution.y,
+                (left + 1) * bmpRezolution.x, bmpRezolution.y * 2);
         left++;
     }
 
@@ -72,7 +90,8 @@ public class GeneralAnimation {
         if ( right < columns) {
             right = 0;
         }
-        src.set(right * width, height * 2, (right + 1) * width, height * 3);
+        src.set(right * bmpRezolution.x, bmpRezolution.y * 2,
+                (right + 1) * bmpRezolution.x, bmpRezolution.y * 3);
         right++;
     }
 
@@ -81,11 +100,8 @@ public class GeneralAnimation {
         if ( back < columns) {
             back = 0;
         }
-        src.set(back * width, height * 3, (back + 1) * width, height * 4);
+        src.set(back * bmpRezolution.x, bmpRezolution.y * 3,
+                (back + 1) * bmpRezolution.y, bmpRezolution.x * 4);
         back++;
-    }
-
-    public Rect getDst() {
-        return dst;
     }
 }

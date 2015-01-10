@@ -21,12 +21,14 @@ public class GameScreen {
     private SurfaceView windowSurface;
     private Context context;
     private Bitmap backGround;
-    private Point windowSize;
+    private static final Point windowSize = new Point();
 
-    public GameScreen(SurfaceView windowSurface, Context context) {
+    public GameScreen(final SurfaceView windowSurface, Context context) {
         this.context = context;
         this.windowSurface = windowSurface;
-        windowSize = new Point();
+        // Just in case
+        windowSize.x = 800;
+        windowSize.y = 480;
         windowSurface.getHolder().addCallback(new SurfaceHolder.Callback() {
             public void surfaceDestroyed(SurfaceHolder holder) {
             }
@@ -34,6 +36,8 @@ public class GameScreen {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 setBackGround(generateBackGround(R.drawable.lighthouse));
+                windowSize.x = windowSurface.getLayoutParams().width;
+                windowSize.y = windowSurface.getLayoutParams().height;
                 draw(getCanvas());
             }
 
@@ -76,7 +80,7 @@ public class GameScreen {
             windowSurface.getHolder().unlockCanvasAndPost(canva);
     }
 
-    public Point getWindowSize() {
+    public static Point getWindowSize() {
         return windowSize;
     }
 }

@@ -19,7 +19,7 @@ public class GameProcess implements Runnable {
     private Joystick joystick;
     private boolean stop, sleepGame;
     private Thread gameThread;
-
+    private static final int fps = 100; // Speed of updates
     private GameProcess() {}
 
     public static GameProcess getGameProcess() {
@@ -80,7 +80,7 @@ public class GameProcess implements Runnable {
                 bullet.draw(canva);
             gameScreen.draw(canva);
             try {
-                Thread.sleep(100);
+                Thread.sleep(fps);
                 if (sleepGame)
                     synchronized (gameThread) {
                         gameThread.wait();
