@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.RectF;
 import android.util.Log;
@@ -177,11 +178,17 @@ public class Joystick  {
         }
     }
 
-    public Stick getStick() {
-        return stick;
+    public Double getDirectionStick() {
+        return stick.getDirectionStick();
     }
 
-    public Aim getAim() {
-        return aim;
+    public Integer stickInField() {
+        return stick.stickInField();
+    }
+
+    public Point getAimPosition() {
+        if (aim.xAim == null)
+            return null;
+        else return new Point(aim.xAim.intValue(), aim.yAim.intValue());
     }
 }
