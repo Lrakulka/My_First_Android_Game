@@ -1,6 +1,7 @@
 package com.example.krabiysok.my_first_android_game;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -20,9 +21,10 @@ import android.view.WindowManager;
 
 
 public class MainActivity extends Activity {
-    GameScreen gameScreen;
-    Joystick joystick;
-    GameProcess gameProcess;
+    private GameScreen gameScreen;
+    private Joystick joystick;
+    private GameProcess gameProcess;
+    private static Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class MainActivity extends Activity {
             joystick = new Joystick((SurfaceView) findViewById(R.id.joystick),
                     (SurfaceView) findViewById(R.id.gameScreen));
             gameProcess = GameProcess.getGameProcess(gameScreen, joystick);
+            context = this;
         }
     }
 
@@ -60,5 +63,9 @@ public class MainActivity extends Activity {
         Log.d("LogApp", "Destroy");
         if (gameProcess != null)
             gameProcess.stopGame();
+    }
+
+    public static Context getContext() {
+        return context;
     }
 }
