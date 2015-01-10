@@ -167,10 +167,14 @@ public class Joystick  {
     Joystick(SurfaceView stickSurfaceV, SurfaceView aimSurfaceV) {
         this.aimSurfaceV = aimSurfaceV;
         this.stickSurfaceV = stickSurfaceV;
-        aim = new Aim();
-        stick = new Stick();
-        aimSurfaceV.setOnTouchListener(aim);
-        stickSurfaceV.setOnTouchListener(stick);
+        if (aimSurfaceV != null) {
+            aim = new Aim();
+            aimSurfaceV.setOnTouchListener(aim);
+        }
+        if (stickSurfaceV != null) {
+            stick = new Stick();
+            stickSurfaceV.setOnTouchListener(stick);
+        }
     }
 
     public Stick getStick() {
