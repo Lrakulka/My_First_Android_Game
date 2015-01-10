@@ -58,7 +58,7 @@ public class GameScreen {
         return canva;
     }
 
-    private Bitmap generateBackGround(int backGrounId) {
+    public Bitmap generateBackGround(int backGrounId) {
         return BitmapFactory.decodeResource(context.getResources(), backGrounId);
         //Need to write cicada method for generation unique background
     }

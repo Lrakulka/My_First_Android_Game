@@ -22,6 +22,7 @@ import android.view.WindowManager;
 public class MainActivity extends Activity {
     GameScreen gameScreen;
     Joystick joystick;
+    GameProcess gameProcess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +37,28 @@ public class MainActivity extends Activity {
             gameScreen = new GameScreen((SurfaceView) findViewById(R.id.gameScreen), this);
             joystick = new Joystick((SurfaceView) findViewById(R.id.joystick),
                     (SurfaceView) findViewById(R.id.gameScreen));
+            gameProcess = GameProcess.getGameProcess(gameScreen, joystick);
         }
     }
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
-        //super.onWindowFocusChanged(hasFocus);
+        super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             Log.d("LogApp", "active");
+            gameProcess.startGame();
         } else {
             Log.d("LogApp", "disabled");
+            gameProcess.sleepGame();
         }
+    }
+
+    // This method doesn't call after finishing application!!!!(need to repair)
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("LogApp", "Destroy");
+        if (gameProcess != null)
+            gameProcess.stopGame();
     }
 }
