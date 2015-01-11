@@ -14,12 +14,12 @@ import java.util.Vector;
  * Created by KrabiySok on 1/10/2015.
  */
 public class GameProcess implements Runnable {
+    public static final int fps = 100; // Speed of updates
     private static GameProcess gameProcess = new GameProcess();
     private GameScreen gameScreen;
     private Joystick joystick;
     private boolean stop, sleepGame;
     private Thread gameThread;
-    public static final int fps = 100; // Speed of updates
     private GameProcess() {}
 
     public static GameProcess getGameProcess() {

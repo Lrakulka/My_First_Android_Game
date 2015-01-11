@@ -45,13 +45,13 @@ public class Joystick  {
     }
 
     private class Stick implements View.OnTouchListener {
+        private static final double PI2 = Math.PI * 2;
         private Paint paint;
         private Float xDotStick, yDotStick; // Small circke I cold dot
         // Joystick circle radius
         private float rBig, rSmall, specialR, jumpR, maxDotDistance;
         private float rBigD, jumpRD; // rBigD = rBig^2; jumpRD = jumpR^2
         private float x, y;
-        private static final double PI2 = Math.PI * 2;
         private DashPathEffect dashPath;
 
         Stick() {

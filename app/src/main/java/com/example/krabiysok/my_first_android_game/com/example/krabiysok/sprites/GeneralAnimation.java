@@ -13,14 +13,15 @@ import com.example.krabiysok.my_first_android_game.GameScreen;
  * Created by KrabiySok on 12/30/2014.
  */
 public class GeneralAnimation {
-    private int rows;
-    private int columns ;
+    private static final double angle45 = Math.PI / 4, angle135 = Math.PI - angle45,
+            angle225 = Math.PI + angle45, angle315 = Math.PI + 2 * angle45,
+            PI360 = Math.PI * 2, PI90 = Math.PI / 2, PI270 = PI90 + Math.PI;
+    private int rows, columns, newXPosition, newYPosition, maxXAnimation, maxYAnimation;
     private Bitmap sprite;
     private Rect src, dst;
     private Point bmpRezolution, spriteRezolution, position;
+    private double angle;
     private byte forward, back, left, right;
-    private static final double angle45 = Math.PI / 4, angle135 = Math.PI - angle45,
-        angle225 = Math.PI + angle45, angle315 = Math.PI + 2 * angle45;
 
     GeneralAnimation(int x, int y, int rows, int columns, Bitmap sprite,
                      Point spriteRezolution) {
@@ -46,23 +47,54 @@ public class GeneralAnimation {
         dst = new Rect(position.x, position.y, position.x + spriteRezolution.x,
                 position.y + spriteRezolution.y);
         forward = back = left = right = 0;
+        maxXAnimation = GameScreen.getWindowSize().x - spriteRezolution.x;
+        maxYAnimation = GameScreen.getWindowSize().y;
     }
 
-    public void draw(Canvas canva, Point position, Double moveAngle) {
+    public void drawMove(Canvas canva, Double moveAngle, int distance) {
         if (position != null) {
-            this.position = position;
-            dst.set(position.x, position.y, position.x + spriteRezolution.x,
-                    position.y + spriteRezolution.y);
-        }
-        if (moveAngle == null || moveAngle > angle315 || moveAngle <= angle45)
+            if (moveAngle > Math.PI)
+                angle = PI360 - moveAngle;
+            else angle = moveAngle;
+            if (angle > PI90)
+                angle = Math.PI - angle;
+            newXPosition = (int) (distance * Math.cos(angle));
+            newYPosition = (int) (distance * Math.sin(angle));
+        } else newYPosition = newXPosition = 0;
+
+        if (moveAngle == null || moveAngle > angle315 || moveAngle <= angle45) {
+            position.y -= newYPosition;
+            position.x += moveAngle > angle315 ? -newXPosition : newXPosition;
             moveBack();
-        else if (moveAngle > angle45 && moveAngle <= angle135)
+        }
+        else if (moveAngle > angle45 && moveAngle <= angle135) {
+                position.x += newYPosition;
+                position.y += moveAngle > PI90 ? newYPosition : -newYPosition;
                 moveRight();
-            else if (moveAngle > angle135 && moveAngle <= angle225)
+            }
+            else if (moveAngle > angle135 && moveAngle <= angle225) {
+                    position.y += newYPosition;
+                    position.x += moveAngle > Math.PI ? -newXPosition : newXPosition;
                     moveForward();
-                else if (moveAngle > angle225 && moveAngle <= angle315)
-                        moveLeft();
+                }
+                else if (moveAngle > angle225 && moveAngle <= angle315) {
+                    position.x -= newXPosition;
+                    position.y += moveAngle > PI270 ? -newYPosition : newYPosition;
+                    moveLeft();
+                }
+        // Protect from going beyond game screen
+        if (position.x < 0)
+            position.x = 0;
+        if (position.x > maxXAnimation)
+            position.x = maxXAnimation;
+        if (position.y > maxYAnimation)
+            position.y = maxYAnimation;
+        if (position.y < spriteRezolution.y)
+            position.y = spriteRezolution.y;
+        dst.set(position.x, position.y, position.x + spriteRezolution.x,
+                position.y + spriteRezolution.y);
         canva.drawBitmap(sprite, src, this.dst, null);
+
     }
 
     private void moveForward() {

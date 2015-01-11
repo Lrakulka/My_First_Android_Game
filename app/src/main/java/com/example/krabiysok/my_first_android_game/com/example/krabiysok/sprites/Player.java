@@ -26,8 +26,6 @@ public class Player extends GeneralAnimation {
     private Weapon weapon;
     private Bullet bullet;
     private Double playerAngle;
-    private Point position;
-    private static final double PI2 = Math.PI * 2;
     private int moveSpeed, playerX0, playerX1, playerY0, playerY1,
             bulletX0, bulletX1, bulletY0, bulletY1;
 
@@ -41,23 +39,14 @@ public class Player extends GeneralAnimation {
 
     public ArrayList<Bullet> action(Canvas canva) {
         playerAngle = joystick.getDirectionStick();
-        position = getPosition();
         moveSpeed = SPEED;
         if (playerAngle != null) {
             if (accelerTime > 0 && joystick.stickInField() == 1) {
                 moveSpeed *= ACCELERATION;
                 accelerTime--;
             }
-            if (Math.PI < playerAngle)
-                position.set((int) (Math.sin(playerAngle) * SPEED),
-                    (int) (Math.cos(Math.PI - playerAngle) * SPEED));
-            else {
-                playerAngle = PI2 - playerAngle;
-                position.set((int) (Math.sin(playerAngle) * SPEED),
-                        (int) (Math.cos(Math.PI - playerAngle) * SPEED));
-            }
         }
-        draw(canva, position, playerAngle);
+        drawMove(canva, playerAngle, moveSpeed);
         for(int i = 0; i < weapons.size(); i++) {
             weapon = weapons.get(i);
             if (weapon.isNoAmmo()) {
