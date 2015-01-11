@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
@@ -37,24 +39,24 @@ public class GeneralAnimation {
         else {
             this.spriteRezolution = new Point (bmpRezolution.x, bmpRezolution.y);
         }
-        double height = (GameScreen.getWindowSize().x / 6) / bmpRezolution.x,
-                weight = (GameScreen.getWindowSize().y / 6) / bmpRezolution.y;
+        /*double weight = ((double) (GameScreen.getWindowSize().x) / 30) / bmpRezolution.x,
+                height = ((double) (GameScreen.getWindowSize().y) / 30) / bmpRezolution.y;
         if (height <= 1 && weight <= 1)
             height = weight = height > weight ? height : weight;
         else height = weight = 1 / (height > weight ? height : weight);
-        spriteRezolution.set((int) (spriteRezolution.y * height),
-                (int) (spriteRezolution.x * weight));
+        this.spriteRezolution.y *= height;
+        this.spriteRezolution.x *= weight;*/
         src = new Rect(0, 0, bmpRezolution.x, bmpRezolution.y);
-        dst = new Rect(position.x, position.y, position.x + spriteRezolution.x,
-                position.y + spriteRezolution.y);
+        dst = new Rect(position.x, position.y, position.x + this.spriteRezolution.x,
+                position.y + this.spriteRezolution.y);
         forward = back = left = right = 0;
-        maxXAnimation = GameScreen.getWindowSize().x - spriteRezolution.x;
-        maxYAnimation = GameScreen.getWindowSize().y;
+        maxXAnimation = GameScreen.getWindowSize().x - this.spriteRezolution.x;
+        maxYAnimation = GameScreen.getWindowSize().y - this.spriteRezolution.y;
     }
 
     public boolean drawMove(Canvas canva, Double moveAngle, int distance) {
         resultOfAnimMove = true;
-        if (position != null) {
+        if (moveAngle != null) {
             if (moveAngle > Math.PI)
                 angle = PI360 - moveAngle;
             else angle = moveAngle;
@@ -62,28 +64,31 @@ public class GeneralAnimation {
                 angle = Math.PI - angle;
             newXPosition = (int) (distance * Math.cos(angle));
             newYPosition = (int) (distance * Math.sin(angle));
-        } else newYPosition = newXPosition = 0;
 
-        if (moveAngle == null || moveAngle > angle315 || moveAngle <= angle45) {
-            position.y -= newYPosition;
-            position.x += moveAngle > angle315 ? -newXPosition : newXPosition;
-            moveBack();
-        }
-        else if (moveAngle > angle45 && moveAngle <= angle135) {
-                position.x += newYPosition;
-                position.y += moveAngle > PI90 ? newYPosition : -newYPosition;
-                moveRight();
+            if (moveAngle > angle315 || moveAngle <= angle45) {
+                position.y -= newYPosition;
+                position.x += moveAngle > angle315 ? -newXPosition : newXPosition;
+                moveBack();
             }
-            else if (moveAngle > angle135 && moveAngle <= angle225) {
-                    position.y += newYPosition;
-                    position.x += moveAngle > Math.PI ? -newXPosition : newXPosition;
-                    moveForward();
+            else if (moveAngle > angle45 && moveAngle <= angle135) {
+                    position.x += newYPosition;
+                    position.y += moveAngle > PI90 ? newYPosition : -newYPosition;
+                    moveRight();
                 }
-                else if (moveAngle > angle225 && moveAngle <= angle315) {
-                    position.x -= newXPosition;
-                    position.y += moveAngle > PI270 ? -newYPosition : newYPosition;
-                    moveLeft();
-                }
+                else if (moveAngle > angle135 && moveAngle <= angle225) {
+                        position.y += newYPosition;
+                        position.x += moveAngle > Math.PI ? -newXPosition : newXPosition;
+                        moveForward();
+                    }
+                    else if (moveAngle > angle225 && moveAngle <= angle315) {
+                        position.x -= newXPosition;
+                        position.y += moveAngle > PI270 ? -newYPosition : newYPosition;
+                        moveLeft();
+                    }
+        } else {
+            forward = 0;
+            moveForward();
+        }
         // Protect from going beyond game screen
         if (position.x < 0) {
             position.x = 0;
@@ -97,8 +102,8 @@ public class GeneralAnimation {
             position.y = maxYAnimation;
             resultOfAnimMove = false;
         }
-        if (position.y < spriteRezolution.y) {
-            position.y = spriteRezolution.y;
+        if (position.y < 0) {
+            position.y = 0;
             resultOfAnimMove = false;
         }
         dst.set(position.x, position.y, position.x + spriteRezolution.x,
@@ -109,7 +114,7 @@ public class GeneralAnimation {
 
     private void moveForward() {
         back = left = right = 0;
-        if ( forward < columns) {
+        if ( forward >= columns) {
             forward = 0;
         }
         src.set(forward * bmpRezolution.x, 0,
@@ -119,7 +124,7 @@ public class GeneralAnimation {
 
     private void moveLeft() {
         back = forward = right = 0;
-        if ( left < columns) {
+        if ( left >= columns) {
             left = 0;
         }
         src.set(left * bmpRezolution.x, bmpRezolution.y,
@@ -129,7 +134,7 @@ public class GeneralAnimation {
 
     private void moveRight() {
         back = forward = left = 0;
-        if ( right < columns) {
+        if ( right >= columns) {
             right = 0;
         }
         src.set(right * bmpRezolution.x, bmpRezolution.y * 2,
@@ -139,7 +144,7 @@ public class GeneralAnimation {
 
     private void moveBack() {
         right = forward = left = 0;
-        if ( back < columns) {
+        if ( back >= columns) {
             back = 0;
         }
         src.set(back * bmpRezolution.x, bmpRezolution.y * 3,

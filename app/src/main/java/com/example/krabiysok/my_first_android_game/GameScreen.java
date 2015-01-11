@@ -4,14 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.DashPathEffect;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.WindowManager;
 
 /**
  * Created by KrabiySok on 1/6/2015.
@@ -35,9 +31,9 @@ public class GameScreen {
 
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                setBackGround(generateBackGround(R.drawable.BackGround));
-                windowSize.x = windowSurface.getLayoutParams().width;
-                windowSize.y = windowSurface.getLayoutParams().height;
+                setBackGround(generateBackGround(R.drawable.back_ground));
+                windowSize.x = windowSurface.getWidth();
+                windowSize.y = windowSurface.getHeight();
                 draw(getCanvas());
             }
 

@@ -15,7 +15,7 @@ import java.util.Vector;
  * Created by KrabiySok on 1/10/2015.
  */
 public class GameProcess implements Runnable {
-    public static final int fps = 100; // Speed of updates
+    public static final int fps = 50; // Speed of updates
     private static GameProcess gameProcess = new GameProcess();
     private GameScreen gameScreen;
     private Joystick joystick;
@@ -42,8 +42,8 @@ public class GameProcess implements Runnable {
     @Override
     public void run() {
         Canvas canva;
-        Player player = new Player(gameScreen.getWindowSize().x,
-                gameScreen.getWindowSize().y, joystick);
+        Player player = new Player(gameScreen.getWindowSize().x / 2,
+                gameScreen.getWindowSize().y / 2, joystick);
         ArrayList<Bullet> bullets = new ArrayList<>();
         /*ArrayList<Enemie> enemies = new ArrayList<>();
         ArrayList<Present> presents = new ArrayList<>();
