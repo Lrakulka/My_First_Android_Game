@@ -15,9 +15,9 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  */
 public class RegularWeapon extends Weapon {
 
-    protected RegularWeapon(int reloudTime, int ammo, Bitmap weapon, Bullet bullet, int bulletReloud) {
+    protected RegularWeapon() {
         super(1000 / GameProcess.fps, 900, BitmapFactory.decodeResource(
-                MainActivity.getContext().getResources(), R.drawable.RegularWepon, bulletReloud);
+                MainActivity.getContext().getResources(), R.drawable.RegularWeapon));
     }
 
     @Override
