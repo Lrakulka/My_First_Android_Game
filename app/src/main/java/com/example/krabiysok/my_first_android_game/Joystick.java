@@ -187,7 +187,7 @@ public class Joystick  {
     }
 
     public Point getAimPosition() {
-        if (aim.xAim == null)
+        if (aim.xAim == null || aim.yAim == null)
             return null;
         else return new Point(aim.xAim.intValue(), aim.yAim.intValue());
     }

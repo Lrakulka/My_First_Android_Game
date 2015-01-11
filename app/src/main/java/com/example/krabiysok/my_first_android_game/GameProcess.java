@@ -19,7 +19,7 @@ public class GameProcess implements Runnable {
     private Joystick joystick;
     private boolean stop, sleepGame;
     private Thread gameThread;
-    private static final int fps = 100; // Speed of updates
+    public static final int fps = 100; // Speed of updates
     private GameProcess() {}
 
     public static GameProcess getGameProcess() {

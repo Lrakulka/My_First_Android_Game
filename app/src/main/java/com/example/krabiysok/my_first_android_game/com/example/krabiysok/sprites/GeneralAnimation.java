@@ -104,4 +104,12 @@ public class GeneralAnimation {
                 (back + 1) * bmpRezolution.y, bmpRezolution.x * 4);
         back++;
     }
+
+    public Point getPosition() {
+        return new Point(position);
+    }
+
+    public Point getSpriteRezolution() {
+        return new Point(spriteRezolution);
+    }
 }
