@@ -8,20 +8,19 @@ import com.example.krabiysok.my_first_android_game.MainActivity;
 import com.example.krabiysok.my_first_android_game.R;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.GeneralAnimation;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
-import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.RegularBullet;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.SpecialBullet;
 
 /**
  * Created by KrabiySok on 1/11/2015.
  */
-public class RegularWeapon extends Weapon {
-
-    protected RegularWeapon(int reloudTime, int ammo, Bitmap weapon, Bullet bullet, int bulletReloud) {
-        super(1000 / GameProcess.fps, 900, BitmapFactory.decodeResource(
-                MainActivity.getContext().getResources(), R.drawable.RegularWeapon, bulletReloud);
+public class SpecialWeapon extends Weapon {
+    protected SpecialWeapon(int bulletReloud, int ammo, Bitmap weapon) {
+        super(500 / GameProcess.fps, 40, BitmapFactory.decodeResource(
+                MainActivity.getContext().getResources(), R.drawable.SpecialWeapon));
     }
 
     @Override
     public Bullet getBullet(int x, int y, GeneralAnimation bulletBelongs, double angle) {
-        return new RegularBullet(x, y, bulletBelongs, angle);
+        return new SpecialBullet(x, y, bulletBelongs, angle);
     }
 }
