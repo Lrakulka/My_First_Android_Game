@@ -28,6 +28,10 @@ public class Bullet extends GeneralAnimation {
         return damage;
     }
 
+    public GeneralAnimation getBulletBelongs() {
+        return bulletBelongs;
+    }
+
     public boolean draw(Canvas canva) {
         return drawMove(canva, angle, speed);
     }
