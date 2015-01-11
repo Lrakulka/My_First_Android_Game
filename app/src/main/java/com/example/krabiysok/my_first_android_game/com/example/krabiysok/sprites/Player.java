@@ -8,6 +8,8 @@ import com.example.krabiysok.my_first_android_game.Joystick;
 import com.example.krabiysok.my_first_android_game.MainActivity;
 import com.example.krabiysok.my_first_android_game.R;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapons.RegularWeapon;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapons.Weapon;
 
 import java.util.ArrayList;
 
@@ -20,18 +22,21 @@ public class Player extends GeneralAnimation {
     private Joystick joystick;
     private int health = HEALTH, accelerTime = ACCELER_TIME;
     private ArrayList<Weapon> weapons;
+    private ArrayList<Bullet> playerBullets;
     private Weapon weapon;
     private Bullet bullet;
     private Double playerAngle;
     private int moveSpeed, playerX0, playerX1, playerY0, playerY1,
             bulletX0, bulletX1, bulletY0, bulletY1;
 
-    Player(int x, int y, Joystick joystick) {
+    public Player(int x, int y, Joystick joystick) {
         super(x, y, 4, 3,
                 BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
                 R.drawable.boy), null);
+        playerBullets  = new ArrayList<>();
         this.joystick = joystick;
-        weapons = new ArrayList<>(new RegularWeapon());
+        weapons = new ArrayList<>();
+        weapons.add(new RegularWeapon());
     }
 
     public ArrayList<Bullet> action(Canvas canva) {
@@ -46,19 +51,22 @@ public class Player extends GeneralAnimation {
         drawMove(canva, playerAngle, moveSpeed);
         for(int i = 0; i < weapons.size(); i++) {
             weapon = weapons.get(i);
-            if (weapon.isNoAmmo()) {
+            if (weapon.getAmmo() <= 0) {
                 weapons.remove(i);
                 i--;
             } break;
         }
-        if (weapon.reloudTime() < weapon.BULLET_RELOUD)
+        if (weapon.getReloudTime() < weapon.getBulletReloud())
             weapon.reloud();
+        playerBullets.clear();
         if (joystick.getAimPosition() != null &&
-                weapon.reloudTime() == weapon.BULLET_RELOUD) {
+                weapon.getReloudTime() == weapon.getBulletReloud()) {
             weapon.startReloud();
-            return weapon.getBullet();
+            playerBullets.add(weapon.getBullet(getPosition().x, getPosition().y,
+                    this, joystick.getAimAngle(getPosition())));
+            return playerBullets;
         }
-        return null;
+        return playerBullets;
     }
 
     public boolean isAlive(ArrayList<Bullet> bullets) {
@@ -75,7 +83,7 @@ public class Player extends GeneralAnimation {
                     bulletY0 >= playerY0 && bulletY1 <= playerY0) ||
                     (bulletX0 >= playerX1 && bulletX1 <= playerX1 &&
                             bulletY0 >= playerY1 && bulletY1 <= playerY1)) {
-                health -= bullet.damage();
+                health -= bullet.getDamage();
                 bullets.remove(i);
                 i--;
             }

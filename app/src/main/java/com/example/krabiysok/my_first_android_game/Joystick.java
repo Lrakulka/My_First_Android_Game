@@ -18,6 +18,7 @@ import android.view.View;
  * Created by KrabiySok on 1/8/2015.
  */
 public class Joystick  {
+    private static final double PI2 = Math.PI * 2;
     private Aim aim;
     private Stick stick;
     private SurfaceView stickSurfaceV, aimSurfaceV;
@@ -45,7 +46,6 @@ public class Joystick  {
     }
 
     private class Stick implements View.OnTouchListener {
-        private static final double PI2 = Math.PI * 2;
         private Paint paint;
         private Float xDotStick, yDotStick; // Small circke I cold dot
         // Joystick circle radius
@@ -190,5 +190,18 @@ public class Joystick  {
         if (aim.xAim == null || aim.yAim == null)
             return null;
         else return new Point(aim.xAim.intValue(), aim.yAim.intValue());
+    }
+
+    public Double getAimAngle(Point position) {
+        if (aim.xAim == null || aim.yAim == null)
+            return null;
+        double a = Math.pow(Math.pow(position.x - aim.xAim, 2) +
+                Math.pow(position.y - aim.yAim, 2), 0.5),
+                c = Math.pow(Math.pow(position.x - aim.xAim, 2) + Math.pow(position.y -
+                        10 - aim.yAim, 2), 0.5);
+        Double result = aim.xAim < position.x ? PI2 - Math.acos((a * a + 10 * 10 -
+                c * c) / (2 * a * 10)) : Math.acos((a * a + 10 * 10 - c * c) /
+                (2 * a * 10));
+        return result;
     }
 }
