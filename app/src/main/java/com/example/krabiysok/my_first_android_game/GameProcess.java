@@ -45,6 +45,7 @@ public class GameProcess implements Runnable {
         Player player = new Player(gameScreen.getWindowSize().x / 2,
                 gameScreen.getWindowSize().y / 2, joystick);
         ArrayList<Bullet> bullets = new ArrayList<>();
+        Bullet bullet;
         /*ArrayList<Enemie> enemies = new ArrayList<>();
         ArrayList<Present> presents = new ArrayList<>();
         Enimie enimie;
@@ -77,8 +78,13 @@ public class GameProcess implements Runnable {
             }*/
             if (!player.isAlive(bullets))
                 stopGame(); //---
-            for(Bullet bullet : bullets)
-                bullet.draw(canva);
+            for(int i = 0; i < bullets.size(); ++i) {
+                bullet = bullets.get(i);
+                if (!bullet.draw(canva)) {
+                    bullets.remove(i);
+                    i--;
+                }
+            }
             gameScreen.draw(canva);
             try {
                 Thread.sleep(fps);

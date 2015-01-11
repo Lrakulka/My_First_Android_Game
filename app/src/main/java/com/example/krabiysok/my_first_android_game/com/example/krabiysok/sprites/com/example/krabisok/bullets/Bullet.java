@@ -15,9 +15,9 @@ public class Bullet extends GeneralAnimation {
     private double angle;
     private GeneralAnimation bulletBelongs;
 
-    Bullet(int x, int y, int rows, int columns, Bitmap sprite, Point spriteRezolution,
+    Bullet(int x, int y, int rows, int columns, Bitmap sprite, double spriteRatioHieght,
            int damage, int speed, double angle, GeneralAnimation bulletBelongs) {
-        super(x, y, rows, columns, sprite, spriteRezolution);
+        super(x, y, rows, columns, sprite, spriteRatioHieght);
         this.damage = damage;
         this.speed = speed;
         this.angle = angle;

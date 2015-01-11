@@ -15,7 +15,7 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  */
 public class SpecialWeapon extends Weapon {
     protected SpecialWeapon(int bulletReloud, int ammo, Bitmap weapon) {
-        super(500 / GameProcess.fps, 40, BitmapFactory.decodeResource(
+        super(100 / GameProcess.fps, 40, BitmapFactory.decodeResource(
                 MainActivity.getContext().getResources(), R.drawable.special_weapon));
     }
 

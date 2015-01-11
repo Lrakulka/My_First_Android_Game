@@ -1,11 +1,7 @@
 package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 
@@ -21,37 +17,29 @@ public class GeneralAnimation {
     private int rows, columns, newXPosition, newYPosition, maxXAnimation, maxYAnimation;
     private Bitmap sprite;
     private Rect src, dst;
-    private Point bmpRezolution, spriteRezolution, position;
+    private Point bmpRezolution, spriteResolution, position;
     private double angle;
     private byte forward, back, left, right;
     private boolean resultOfAnimMove;
 
     protected GeneralAnimation(int x, int y, int rows, int columns, Bitmap sprite,
-                               Point spriteRezolution) {
+                               double spriteRatioHieght) {
         this.rows = rows;
         this.columns = columns;
         this.sprite = sprite;
         bmpRezolution = new Point(sprite.getWidth() / columns,
                 sprite.getHeight() / rows);
         position = new Point(x, y);
-        if (spriteRezolution != null)
-            this.spriteRezolution = spriteRezolution;
-        else {
-            this.spriteRezolution = new Point (bmpRezolution.x, bmpRezolution.y);
-        }
-        /*double weight = ((double) (GameScreen.getWindowSize().x) / 30) / bmpRezolution.x,
-                height = ((double) (GameScreen.getWindowSize().y) / 30) / bmpRezolution.y;
-        if (height <= 1 && weight <= 1)
-            height = weight = height > weight ? height : weight;
-        else height = weight = 1 / (height > weight ? height : weight);
-        this.spriteRezolution.y *= height;
-        this.spriteRezolution.x *= weight;*/
+        this.spriteResolution = new Point();
+        // Gets resolution of sprite on game screen
+        this.spriteResolution.y = (int) (GameScreen.getWindowSize().y * spriteRatioHieght);
+        this.spriteResolution.x =  bmpRezolution.x * this.spriteResolution.y / bmpRezolution.y;
         src = new Rect(0, 0, bmpRezolution.x, bmpRezolution.y);
-        dst = new Rect(position.x, position.y, position.x + this.spriteRezolution.x,
-                position.y + this.spriteRezolution.y);
+        dst = new Rect(position.x, position.y, position.x + this.spriteResolution.x,
+                position.y + this.spriteResolution.y);
         forward = back = left = right = 0;
-        maxXAnimation = GameScreen.getWindowSize().x - this.spriteRezolution.x;
-        maxYAnimation = GameScreen.getWindowSize().y - this.spriteRezolution.y;
+        maxXAnimation = GameScreen.getWindowSize().x - this.spriteResolution.x;
+        maxYAnimation = GameScreen.getWindowSize().y - this.spriteResolution.y;
     }
 
     public boolean drawMove(Canvas canva, Double moveAngle, int distance) {
@@ -106,8 +94,8 @@ public class GeneralAnimation {
             position.y = 0;
             resultOfAnimMove = false;
         }
-        dst.set(position.x, position.y, position.x + spriteRezolution.x,
-                position.y + spriteRezolution.y);
+        dst.set(position.x, position.y, position.x + spriteResolution.x,
+                position.y + spriteResolution.y);
         canva.drawBitmap(sprite, src, this.dst, null);
         return resultOfAnimMove;
     }
@@ -156,7 +144,7 @@ public class GeneralAnimation {
         return new Point(position);
     }
 
-    public Point getSpriteRezolution() {
-        return new Point(spriteRezolution);
+    public Point getSpriteResolution() {
+        return new Point(spriteResolution);
     }
 }

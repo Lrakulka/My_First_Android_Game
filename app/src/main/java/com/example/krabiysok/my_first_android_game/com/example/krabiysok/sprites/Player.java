@@ -2,7 +2,6 @@ package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprite
 
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Point;
 
 import com.example.krabiysok.my_first_android_game.GameProcess;
 import com.example.krabiysok.my_first_android_game.Joystick;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
  * Created by KrabiySok on 1/10/2015.
  */
 public class Player extends GeneralAnimation {
-    private static final int HEALTH = 100, SPEED = 500 / GameProcess.fps,
+    private static final int HEALTH = 200, SPEED = 500 / GameProcess.fps,
             ACCELER_TIME = 30000 / GameProcess.fps, ACCELERATION = 2;
     private Joystick joystick;
     private int health = HEALTH, accelerTime = ACCELER_TIME;
@@ -33,7 +32,7 @@ public class Player extends GeneralAnimation {
     public Player(int x, int y, Joystick joystick) {
         super(x, y, 4, 3,
                 BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
-                R.drawable.boy), new Point(50, 50));
+                R.drawable.boy), 0.12);
         playerBullets  = new ArrayList<>();
         this.joystick = joystick;
         weapons = new ArrayList<>();
@@ -77,10 +76,10 @@ public class Player extends GeneralAnimation {
             playerY0 = getPosition().y;
             bulletX0 = bullet.getPosition().x;
             bulletY0 = bullet.getPosition().y;
-            playerX1 = playerX0 + getSpriteRezolution().x;
-            playerY1 = playerY0 + getSpriteRezolution().y;
-            bulletX1 = bulletX0 + bullet.getSpriteRezolution().x;
-            bulletY1 = bulletY0 + bullet.getSpriteRezolution().y;
+            playerX1 = playerX0 + getSpriteResolution().x;
+            playerY1 = playerY0 + getSpriteResolution().y;
+            bulletX1 = bulletX0 + bullet.getSpriteResolution().x;
+            bulletY1 = bulletY0 + bullet.getSpriteResolution().y;
             if ((bulletX0 >= playerX0 && bulletX1 <= playerX0 &&
                     bulletY0 >= playerY0 && bulletY1 <= playerY0) ||
                     (bulletX0 >= playerX1 && bulletX1 <= playerX1 &&

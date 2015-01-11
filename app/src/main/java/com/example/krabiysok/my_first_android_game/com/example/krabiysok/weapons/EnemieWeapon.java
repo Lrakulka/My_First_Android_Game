@@ -15,7 +15,7 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  */
 public class EnemieWeapon extends Weapon {
     protected EnemieWeapon(int bulletReloud, int ammo, Bitmap weapon) {
-        super(1500 / GameProcess.fps, 1000, BitmapFactory.decodeResource(
+        super(500 / GameProcess.fps, 1000, BitmapFactory.decodeResource(
                 MainActivity.getContext().getResources(), R.drawable.enemie_weapon));
     }
 
