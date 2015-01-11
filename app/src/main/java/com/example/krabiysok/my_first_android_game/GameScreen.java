@@ -35,7 +35,7 @@ public class GameScreen {
 
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
-                setBackGround(generateBackGround(R.drawable.lighthouse));
+                setBackGround(generateBackGround(R.drawable.BackGround));
                 windowSize.x = windowSurface.getLayoutParams().width;
                 windowSize.y = windowSurface.getLayoutParams().height;
                 draw(getCanvas());
