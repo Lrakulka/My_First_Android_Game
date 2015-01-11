@@ -1,16 +1,13 @@
 package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Point;
 
 import com.example.krabiysok.my_first_android_game.GameProcess;
-import com.example.krabiysok.my_first_android_game.GameScreen;
 import com.example.krabiysok.my_first_android_game.Joystick;
 import com.example.krabiysok.my_first_android_game.MainActivity;
 import com.example.krabiysok.my_first_android_game.R;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
 
 import java.util.ArrayList;
 

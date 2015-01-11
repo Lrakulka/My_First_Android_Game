@@ -22,9 +22,10 @@ public class GeneralAnimation {
     private Point bmpRezolution, spriteRezolution, position;
     private double angle;
     private byte forward, back, left, right;
+    private boolean resultOfAnimMove;
 
-    GeneralAnimation(int x, int y, int rows, int columns, Bitmap sprite,
-                     Point spriteRezolution) {
+    protected GeneralAnimation(int x, int y, int rows, int columns, Bitmap sprite,
+                               Point spriteRezolution) {
         this.rows = rows;
         this.columns = columns;
         this.sprite = sprite;
@@ -51,7 +52,8 @@ public class GeneralAnimation {
         maxYAnimation = GameScreen.getWindowSize().y;
     }
 
-    public void drawMove(Canvas canva, Double moveAngle, int distance) {
+    public boolean drawMove(Canvas canva, Double moveAngle, int distance) {
+        resultOfAnimMove = true;
         if (position != null) {
             if (moveAngle > Math.PI)
                 angle = PI360 - moveAngle;
@@ -83,18 +85,26 @@ public class GeneralAnimation {
                     moveLeft();
                 }
         // Protect from going beyond game screen
-        if (position.x < 0)
+        if (position.x < 0) {
             position.x = 0;
-        if (position.x > maxXAnimation)
+            resultOfAnimMove = false;
+        }
+        if (position.x > maxXAnimation) {
             position.x = maxXAnimation;
-        if (position.y > maxYAnimation)
+            resultOfAnimMove = false;
+        }
+        if (position.y > maxYAnimation) {
             position.y = maxYAnimation;
-        if (position.y < spriteRezolution.y)
+            resultOfAnimMove = false;
+        }
+        if (position.y < spriteRezolution.y) {
             position.y = spriteRezolution.y;
+            resultOfAnimMove = false;
+        }
         dst.set(position.x, position.y, position.x + spriteRezolution.x,
                 position.y + spriteRezolution.y);
         canva.drawBitmap(sprite, src, this.dst, null);
-
+        return resultOfAnimMove;
     }
 
     private void moveForward() {
