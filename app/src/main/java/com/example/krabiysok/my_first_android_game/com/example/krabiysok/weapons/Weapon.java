@@ -10,16 +10,13 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
 public abstract class Weapon {
     private Bitmap weapon;
     private int reloudTime, ammo;
-    private Bullet bullet;
     public int bulletReloud;
 
-    protected Weapon(int reloudTime, int ammo, Bitmap weapon,
-                     Bullet bullet, int bulletReloud) {
+    protected Weapon(int reloudTime, int ammo, Bitmap weapon, int bulletReloud) {
         this.bulletReloud = bulletReloud;
         this.reloudTime = reloudTime;
         this.ammo = ammo;
         this.weapon = weapon;
-        this.bullet = bullet;
     }
 
     public void startReloud() {
