@@ -13,9 +13,9 @@ public abstract class Weapon {
     private int reloudTime, ammo;
     public int bulletReloud;
 
-    protected Weapon(int reloudTime, int ammo, Bitmap weapon, int bulletReloud) {
+    protected Weapon(int bulletReloud, int ammo, Bitmap weapon) {
         this.bulletReloud = bulletReloud;
-        this.reloudTime = reloudTime;
+        this.reloudTime = bulletReloud;
         this.ammo = ammo;
         this.weapon = weapon;
     }
