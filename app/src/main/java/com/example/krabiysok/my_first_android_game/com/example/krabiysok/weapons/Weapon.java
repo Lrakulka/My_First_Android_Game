@@ -2,6 +2,7 @@ package com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapon
 
 import android.graphics.Bitmap;
 
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.GeneralAnimation;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
 
 /**
@@ -40,7 +41,8 @@ public abstract class Weapon {
         return ammo;
     }
 
-    public abstract Bullet getBullet();
+    public abstract Bullet getBullet(int x, int y,
+                                     GeneralAnimation bulletBelongs, double angle);
 
     public int getBulletReloud() {
         return bulletReloud;

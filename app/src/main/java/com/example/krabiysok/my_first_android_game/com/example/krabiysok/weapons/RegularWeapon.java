@@ -12,11 +12,16 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
 public class RegularWeapon extends Weapon {
 
     protected RegularWeapon(int reloudTime, int ammo, Bitmap weapon, Bullet bullet, int bulletReloud) {
-        super(reloudTime, ammo, weapon, bullet, bulletReloud);
+        super(reloudTime, ammo, weapon, bulletReloud);
     }
 
     @Override
     public Bullet getBullet(int x, int y, GeneralAnimation bulletBelongs, double angle) {
         return new RegularBullet(x, y, bulletBelongs, angle);
+    }
+
+    @Override
+    public Bullet getBullet() {
+        return null;
     }
 }
