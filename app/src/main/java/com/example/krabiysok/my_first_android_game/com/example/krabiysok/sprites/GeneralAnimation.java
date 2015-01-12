@@ -14,7 +14,8 @@ public class GeneralAnimation {
     private static final double angle45 = Math.PI / 4, angle135 = Math.PI - angle45,
             angle225 = Math.PI + angle45, angle315 = Math.PI + 2 * angle45,
             PI360 = Math.PI * 2, PI90 = Math.PI / 2, PI270 = PI90 + Math.PI;
-    private int rows, columns, newXPosition, newYPosition, maxXAnimation, maxYAnimation;
+    private int rows, columns, newXPosition, newYPosition, maxXAnimation, maxYAnimation,
+            minXAnimation, minYAnimation;
     private Bitmap sprite;
     private Rect src, dst;
     private Point bmpRezolution, spriteResolution, position;
@@ -40,6 +41,8 @@ public class GeneralAnimation {
         forward = back = left = right = 0;
         maxXAnimation = GameScreen.getWindowSize().x - this.spriteResolution.x;
         maxYAnimation = GameScreen.getWindowSize().y - this.spriteResolution.y;
+        minYAnimation = (int) (GameScreen.getWindowSize().y * 0.2);
+        minXAnimation = 0;
     }
 
     public boolean drawMove(Canvas canva, Double moveAngle, int distance) {
@@ -78,8 +81,8 @@ public class GeneralAnimation {
             moveForward();
         }
         // Protect from going beyond game screen
-        if (position.x < 0) {
-            position.x = 0;
+        if (position.x < minXAnimation) {
+            position.x = minXAnimation;
             resultOfAnimMove = false;
         }
         if (position.x > maxXAnimation) {
@@ -90,8 +93,8 @@ public class GeneralAnimation {
             position.y = maxYAnimation;
             resultOfAnimMove = false;
         }
-        if (position.y < 0) {
-            position.y = 0;
+        if (position.y < minYAnimation) {
+            position.y = minYAnimation;
             resultOfAnimMove = false;
         }
         dst.set(position.x, position.y, position.x + spriteResolution.x,

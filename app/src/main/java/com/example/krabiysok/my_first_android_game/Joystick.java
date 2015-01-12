@@ -66,7 +66,7 @@ public class Joystick  {
                     if (aimSurfaceV.getHeight() > 0)
                         stickSurfaceV.getLayoutParams().height =
                             stickSurfaceV.getLayoutParams().width = (int)
-                                   (aimSurfaceV.getHeight() / 3.5);
+                                   (aimSurfaceV.getHeight() / 3);
                     else stickSurfaceV.getLayoutParams().height =
                             stickSurfaceV.getLayoutParams().width = 200;
                     paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -77,7 +77,7 @@ public class Joystick  {
                     dashPath = new DashPathEffect(new float[] { 5, 10, 5, 5 }, 1);
                     x = y = jumpR = stickSurfaceV.getLayoutParams().height / 2;
                     jumpR -= paint.getStrokeWidth() / 2;
-                    rBig = (float) (jumpR / 1.7);
+                    rBig = (float) (jumpR / 1.8);
                     rSmall = rBig / 2;
                     specialR = (float)(rBig - paint.getStrokeWidth() / 1.5);
                     maxDotDistance = (float) (rBig * 0.8);

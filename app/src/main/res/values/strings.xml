@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">My_First_Android_Game</string>
-    <string name="hello_world">Hello world!</string>
+    <string name="loading">Please wait. Loading...</string>
     <string name="action_settings">Settings</string>
 
 </resources>
