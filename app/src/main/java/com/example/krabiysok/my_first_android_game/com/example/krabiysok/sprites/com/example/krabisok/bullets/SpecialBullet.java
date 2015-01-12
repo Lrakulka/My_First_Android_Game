@@ -14,7 +14,7 @@ public class SpecialBullet extends Bullet {
     public SpecialBullet(int x, int y, GeneralAnimation bulletBelongs, double angle) {
         super(x, y, 4, 4,
                 BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
-                        R.drawable.special_bullet), 0.05, 30, 800 / GameProcess.fps,
+                        R.drawable.special_bullet), 0.1, 30, 800 / GameProcess.fps,
                 angle, bulletBelongs);
     }
 }

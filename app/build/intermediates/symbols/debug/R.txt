@@ -341,10 +341,11 @@ int drawable enemie_weapon 0x7f020037
 int drawable general 0x7f020038
 int drawable ic_launcher 0x7f020039
 int drawable regular_bullet 0x7f02003a
-int drawable regular_weapon 0x7f02003b
-int drawable special_bullet 0x7f02003c
-int drawable special_weapon 0x7f02003d
-int drawable sucub 0x7f02003e
+int drawable regular_bullet1 0x7f02003b
+int drawable regular_weapon 0x7f02003c
+int drawable special_bullet 0x7f02003d
+int drawable special_weapon 0x7f02003e
+int drawable sucub 0x7f02003f
 int id action_bar 0x7f080031
 int id action_bar_activity_content 0x7f080000
 int id action_bar_container 0x7f080030

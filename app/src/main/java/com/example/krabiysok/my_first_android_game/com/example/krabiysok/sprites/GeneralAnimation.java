@@ -15,11 +15,11 @@ public class GeneralAnimation {
     private static final double angle45 = Math.PI / 4, angle135 = Math.PI - angle45,
             angle225 = Math.PI + angle45, angle315 = Math.PI + 2 * angle45,
             PI360 = Math.PI * 2, PI90 = Math.PI / 2, PI270 = PI90 + Math.PI;
-    private int rows, columns, newXPosition, newYPosition, maxXAnimation, maxYAnimation,
-            minXAnimation, minYAnimation;
+    private int rows, columns, newXPosition, newYPosition, maxXAnimatPos, maxYAnimatPos,
+            minXAnimatPos, minYAnimatPos;
     private Bitmap sprite, bulletSprite;
     private Rect src, dst;
-    private Point bmpRezolution, spriteResolution, position;
+    private Point bmpRezolution, spriteResolution, position, spriteNormalResolution;
     private double angle;
     private byte forward, back, left, right;
     private boolean resultOfAnimMove;
@@ -33,23 +33,21 @@ public class GeneralAnimation {
         bmpRezolution = new Point(sprite.getWidth() / columns,
                 sprite.getHeight() / rows);
         position = new Point(x, y);
-        this.spriteResolution = new Point();
+        spriteNormalResolution = new Point();
         // Gets resolution of sprite on game screen
-        this.spriteResolution.y = (int) (GameScreen.getWindowSize().y * spriteRatioHieght);
-        this.spriteResolution.x =  bmpRezolution.x * this.spriteResolution.y / bmpRezolution.y;
+        this.spriteNormalResolution.y = (int) (GameScreen.getWindowSize().y * spriteRatioHieght);
+        this.spriteNormalResolution.x =  bmpRezolution.x *
+                this.spriteNormalResolution.y / bmpRezolution.y;
         src = new Rect(0, 0, bmpRezolution.x, bmpRezolution.y);
-        dst = new Rect(position.x, position.y, position.x + this.spriteResolution.x,
-                position.y + this.spriteResolution.y);
+        dst = new Rect(position.x, position.y, position.x + this.spriteNormalResolution.x,
+                position.y + this.spriteNormalResolution.y);
         matrix = new Matrix();
         forward = back = left = right = 0;
-        maxXAnimation = GameScreen.getWindowSize().x - this.spriteResolution.x;
-        maxYAnimation = GameScreen.getWindowSize().y - this.spriteResolution.y;
-        minYAnimation = (int) (GameScreen.getWindowSize().y * 0.2);
-        minXAnimation = 0;
-
-        // One bullet. No bullet animation
-        bulletSprite = Bitmap.createBitmap(sprite, 0, bmpRezolution.y * 3,
-                bmpRezolution.x, bmpRezolution.y);
+        maxXAnimatPos = GameScreen.getWindowSize().x - this.spriteNormalResolution.x;
+        maxYAnimatPos = GameScreen.getWindowSize().y - this.spriteNormalResolution.y;
+        minYAnimatPos = (int) (GameScreen.getWindowSize().y * 0.25);
+        minXAnimatPos = 0;
+        this.spriteResolution = new Point(spriteNormalResolution);
     }
 
     public boolean drawMove(Canvas canva, Double moveAngle, int distance) {
@@ -88,22 +86,27 @@ public class GeneralAnimation {
             moveForward();
         }
         // Protect from going beyond game screen
-        if (position.x < minXAnimation) {
-            position.x = minXAnimation;
+        maxXAnimatPos = GameScreen.getWindowSize().x - this.spriteResolution.x;
+        if (position.x < minXAnimatPos) {
+            position.x = minXAnimatPos;
             resultOfAnimMove = false;
         }
-        if (position.x > maxXAnimation) {
-            position.x = maxXAnimation;
+        if (position.x > maxXAnimatPos) {
+            position.x = maxXAnimatPos;
             resultOfAnimMove = false;
         }
-        if (position.y > maxYAnimation) {
-            position.y = maxYAnimation;
+        if (position.y > maxYAnimatPos) {
+            position.y = maxYAnimatPos;
             resultOfAnimMove = false;
         }
-        if (position.y < minYAnimation) {
-            position.y = minYAnimation;
+        if (position.y < minYAnimatPos) {
+            position.y = minYAnimatPos;
             resultOfAnimMove = false;
         }
+        spriteResolution.x = (int) (spriteNormalResolution.x *
+                ((float) position.y / GameScreen.getWindowSize().y));
+        spriteResolution.y = (int) (spriteNormalResolution.y *
+                ((float)position.y / GameScreen.getWindowSize().y));
         dst.set(position.x, position.y, position.x + spriteResolution.x,
                 position.y + spriteResolution.y);
         canva.drawBitmap(sprite, src, this.dst, null);
@@ -111,6 +114,7 @@ public class GeneralAnimation {
     }
 
     //No bullet animation
+    // Rotate bullet from last raw.
     public boolean drawBulletMove(Canvas canva, Double moveAngle, int distance) {
         resultOfAnimMove = true;
         if (moveAngle != null) {
@@ -141,29 +145,35 @@ public class GeneralAnimation {
         }
 
         // Protect from going beyond game screen
-        if (position.x < minXAnimation) {
-            position.x = minXAnimation;
+        maxXAnimatPos = GameScreen.getWindowSize().x - this.spriteResolution.x;
+        if (position.x < minXAnimatPos) {
+            position.x = minXAnimatPos;
             resultOfAnimMove = false;
         }
-        if (position.x > maxXAnimation) {
-            position.x = maxXAnimation;
+        if (position.x > maxXAnimatPos) {
+            position.x = maxXAnimatPos;
             resultOfAnimMove = false;
         }
-        if (position.y > maxYAnimation) {
-            position.y = maxYAnimation;
+        if (position.y > maxYAnimatPos) {
+            position.y = maxYAnimatPos;
             resultOfAnimMove = false;
         }
-        if (position.y < minYAnimation) {
-            position.y = minYAnimation;
+        if (position.y < minYAnimatPos) {
+            position.y = minYAnimatPos;
             resultOfAnimMove = false;
         }
-        dst.set(position.x, position.y, position.x + spriteResolution.x,
-                position.y + spriteResolution.y);
-        // Rotate bullet
+        spriteResolution.x = (int) (spriteNormalResolution.x *
+                ((float) position.y / GameScreen.getWindowSize().y));
+        spriteResolution.y = (int) (spriteNormalResolution.y *
+                ((float)position.y / GameScreen.getWindowSize().y));
+        dst.set(position.x, position.y, position.x + (int) (spriteResolution.x ),
+                position.y + (int) (spriteResolution.y ));
 
         matrix.setTranslate(dst.centerX(), dst.centerY());
         matrix.preRotate((float) (moveAngle * 57.296));
-        canva.drawBitmap(bulletSprite, matrix, null);
+        bulletSprite = Bitmap.createBitmap(sprite, 0, bmpRezolution.y * (rows - 1),
+                bmpRezolution.x, bmpRezolution.y, matrix, true);
+        canva.drawBitmap(bulletSprite, src, dst, null);
         return resultOfAnimMove;
     }
 

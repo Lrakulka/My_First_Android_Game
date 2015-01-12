@@ -64,7 +64,7 @@ public class Joystick  {
                     if (aimSurfaceV.getHeight() > 0)
                         stickSurfaceV.getLayoutParams().height =
                             stickSurfaceV.getLayoutParams().width = (int)
-                                   (aimSurfaceV.getHeight() / 3);
+                                   (aimSurfaceV.getHeight() / 2.8);
                     else stickSurfaceV.getLayoutParams().height =
                             stickSurfaceV.getLayoutParams().width = 200;
                     paint = new Paint(Paint.ANTI_ALIAS_FLAG);

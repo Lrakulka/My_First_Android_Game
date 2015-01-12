@@ -14,7 +14,7 @@ public class EnemieBullet extends Bullet {
     public EnemieBullet(int x, int y, GeneralAnimation bulletBelongs, double angle) {
         super(x, y, 4, 4,
                 BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
-                        R.drawable.enemie_bullet), 0.07, 10, 1500 / GameProcess.fps,
+                        R.drawable.enemie_bullet), 0.14, 10, 1500 / GameProcess.fps,
                 angle, bulletBelongs);
     }
 }

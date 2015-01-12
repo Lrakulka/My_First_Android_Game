@@ -51,10 +51,12 @@ public class MainActivity extends Activity {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             Log.d("LogApp", "active");
-            gameProcess.startGame();
+            if (gameProcess != null)
+                gameProcess.startGame();
         } else {
             Log.d("LogApp", "disabled");
-            gameProcess.sleepGame();
+            if (gameProcess != null)
+                gameProcess.sleepGame();
         }
     }
 
