@@ -33,6 +33,6 @@ public class Bullet extends GeneralAnimation {
     }
 
     public boolean draw(Canvas canva) {
-        return drawMove(canva, angle, speed);
+        return drawBulletMove(canva, angle, speed);
     }
 }

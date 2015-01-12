@@ -2,6 +2,7 @@ package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprite
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
 
@@ -16,12 +17,13 @@ public class GeneralAnimation {
             PI360 = Math.PI * 2, PI90 = Math.PI / 2, PI270 = PI90 + Math.PI;
     private int rows, columns, newXPosition, newYPosition, maxXAnimation, maxYAnimation,
             minXAnimation, minYAnimation;
-    private Bitmap sprite;
+    private Bitmap sprite, bulletSprite;
     private Rect src, dst;
     private Point bmpRezolution, spriteResolution, position;
     private double angle;
     private byte forward, back, left, right;
     private boolean resultOfAnimMove;
+    private Matrix matrix;
 
     protected GeneralAnimation(int x, int y, int rows, int columns, Bitmap sprite,
                                double spriteRatioHieght) {
@@ -38,11 +40,16 @@ public class GeneralAnimation {
         src = new Rect(0, 0, bmpRezolution.x, bmpRezolution.y);
         dst = new Rect(position.x, position.y, position.x + this.spriteResolution.x,
                 position.y + this.spriteResolution.y);
+        matrix = new Matrix();
         forward = back = left = right = 0;
         maxXAnimation = GameScreen.getWindowSize().x - this.spriteResolution.x;
         maxYAnimation = GameScreen.getWindowSize().y - this.spriteResolution.y;
         minYAnimation = (int) (GameScreen.getWindowSize().y * 0.2);
         minXAnimation = 0;
+
+        // One bullet. No bullet animation
+        bulletSprite = Bitmap.createBitmap(sprite, 0, bmpRezolution.y * 3,
+                bmpRezolution.x, bmpRezolution.y);
     }
 
     public boolean drawMove(Canvas canva, Double moveAngle, int distance) {
@@ -53,8 +60,8 @@ public class GeneralAnimation {
             else angle = moveAngle;
             if (angle > PI90)
                 angle = Math.PI - angle;
-            newXPosition = (int) (distance * Math.cos(angle));
-            newYPosition = (int) (distance * Math.sin(angle));
+            newYPosition = (int) (distance * Math.cos(angle));
+            newXPosition = (int) (distance * Math.sin(angle));
 
             if (moveAngle > angle315 || moveAngle <= angle45) {
                 position.y -= newYPosition;
@@ -62,7 +69,7 @@ public class GeneralAnimation {
                 moveBack();
             }
             else if (moveAngle > angle45 && moveAngle <= angle135) {
-                    position.x += newYPosition;
+                    position.x += newXPosition;
                     position.y += moveAngle > PI90 ? newYPosition : -newYPosition;
                     moveRight();
                 }
@@ -103,6 +110,63 @@ public class GeneralAnimation {
         return resultOfAnimMove;
     }
 
+    //No bullet animation
+    public boolean drawBulletMove(Canvas canva, Double moveAngle, int distance) {
+        resultOfAnimMove = true;
+        if (moveAngle != null) {
+            if (moveAngle > Math.PI)
+                angle = PI360 - moveAngle;
+            else angle = moveAngle;
+            if (angle > PI90)
+                angle = Math.PI - angle;
+            newYPosition = (int) (distance * Math.cos(angle));
+            newXPosition = (int) (distance * Math.sin(angle));
+
+            if (moveAngle > angle315 || moveAngle <= angle45) {
+                position.y -= newYPosition;
+                position.x += moveAngle > angle315 ? -newXPosition : newXPosition;
+            }
+            else if (moveAngle > angle45 && moveAngle <= angle135) {
+                position.x += newXPosition;
+                position.y += moveAngle > PI90 ? newYPosition : -newYPosition;
+            }
+            else if (moveAngle > angle135 && moveAngle <= angle225) {
+                position.y += newYPosition;
+                position.x += moveAngle > Math.PI ? -newXPosition : newXPosition;
+            }
+            else if (moveAngle > angle225 && moveAngle <= angle315) {
+                position.x -= newXPosition;
+                position.y += moveAngle > PI270 ? -newYPosition : newYPosition;
+            }
+        }
+
+        // Protect from going beyond game screen
+        if (position.x < minXAnimation) {
+            position.x = minXAnimation;
+            resultOfAnimMove = false;
+        }
+        if (position.x > maxXAnimation) {
+            position.x = maxXAnimation;
+            resultOfAnimMove = false;
+        }
+        if (position.y > maxYAnimation) {
+            position.y = maxYAnimation;
+            resultOfAnimMove = false;
+        }
+        if (position.y < minYAnimation) {
+            position.y = minYAnimation;
+            resultOfAnimMove = false;
+        }
+        dst.set(position.x, position.y, position.x + spriteResolution.x,
+                position.y + spriteResolution.y);
+        // Rotate bullet
+
+        matrix.setTranslate(dst.centerX(), dst.centerY());
+        matrix.preRotate((float) (moveAngle * 57.296));
+        canva.drawBitmap(bulletSprite, matrix, null);
+        return resultOfAnimMove;
+    }
+
     private void moveForward() {
         back = left = right = 0;
         if ( forward >= columns) {
@@ -139,7 +203,7 @@ public class GeneralAnimation {
             back = 0;
         }
         src.set(back * bmpRezolution.x, bmpRezolution.y * 3,
-                (back + 1) * bmpRezolution.y, bmpRezolution.x * 4);
+                (back + 1) * bmpRezolution.x, bmpRezolution.y * 4);
         back++;
     }
 
