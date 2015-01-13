@@ -22,7 +22,7 @@ import java.util.Random;
  * Created by KrabiySok on 1/10/2015.
  */
 public class GameProcess implements Runnable {
-    public static final int fps = 100; // Speed of updates
+    public static final int fps = 80; // Speed of updates
     private static GameProcess gameProcess = new GameProcess();
     private GameScreen gameScreen;
     private Joystick joystick;
@@ -71,9 +71,9 @@ public class GameProcess implements Runnable {
             Log.d("LogApp", "game Go");
             if (player.getScore100() > currentFPS)
                 currentFPS = fps - player.getScore100();
-            randomAbsInt = (Math.abs(random.nextInt()) % fps);
+            randomAbsInt = Math.abs(random.nextInt(1000));
             if ((enemies.size() < 7) && (enemies.isEmpty() ||
-                    randomAbsInt < player.getScore100())) {
+                    (randomAbsInt % fps) < player.getScore100())) {
                 x = randomAbsInt % 2 == 1 ? 0 : GameScreen.getWindowSize().x;
                 y = GameScreen.GAME_SCREEN_HEIGHT_MIN + randomAbsInt %
                         (GameScreen.getWindowSize().y - GameScreen.GAME_SCREEN_HEIGHT_MIN);

@@ -28,11 +28,12 @@ public class MrCat extends GeneralAnimation {
             angle105 = PI90 + angle15, angle255 = PI270 - angle15;
     private double moveAngle;
     private boolean active;
+    private int presentCount;
 
     public MrCat() {
         super(0, 0, 4, 3, BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
                 R.drawable.mr_cat), 0.12);
-        moveAngle = angle225;
+        moveAngle = PI270;
     }
 
     public Present action(Canvas canva, int randKey) {
@@ -56,14 +57,22 @@ public class MrCat extends GeneralAnimation {
                 active = false;
             }
         }
-        if (!active && (randKey % 50 < 2))
+        if (!active && (randKey % 50 < 2)) {
             active = true;
+            presentCount = 0;
+        }
         if (active) {
             drawMove(canva, moveAngle, SPEED);
-            if ((randKey % 100) < 3) switch (randKey % 3) {
-                case 0: return new HealthPresent(position.x, position.y);
-                case 1: return new WeaponPresent(position.x, position.y);
-                case 2: return new AccelerationPresent(position.x, position.y);
+            if (presentCount < 5 &&(randKey % 100) < 3) {
+                presentCount++;
+                switch (randKey % 3) {
+                    case 0:
+                        return new HealthPresent(position.x, position.y);
+                    case 1:
+                        return new WeaponPresent(position.x, position.y);
+                    case 2:
+                        return new AccelerationPresent(position.x, position.y);
+                }
             }
         }
         return null;
