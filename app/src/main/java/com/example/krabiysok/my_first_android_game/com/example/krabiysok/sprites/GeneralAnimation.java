@@ -152,7 +152,7 @@ public class GeneralAnimation {
         if (position.x > maxXAnimatPos + 20) {
             resultOfAnimMove = false;
         }
-        if (position.y > maxYAnimatPos + 20) {
+        if (position.y > GameScreen.getWindowSize().y + 20) {
             resultOfAnimMove = false;
         }
         if (position.y < minYAnimatPos) {
