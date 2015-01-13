@@ -1,14 +1,17 @@
 package com.example.krabiysok.my_first_android_game;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.Log;
 
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.Player;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Enemie;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Major;
 
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.Vector;
 
 
 /**
@@ -21,7 +24,13 @@ public class GameProcess implements Runnable {
     private Joystick joystick;
     private boolean stop, sleepGame;
     private Thread gameThread;
-    private GameProcess() {}
+    private Paint paint;
+
+    private GameProcess() {
+        paint = new Paint();
+        paint.setColor(Color.RED);
+        paint.setTextSize(GameScreen.getWindowSize().y / 10);
+    }
 
     public static GameProcess getGameProcess() {
         if (gameProcess.gameScreen != null)
@@ -46,38 +55,46 @@ public class GameProcess implements Runnable {
                 gameScreen.getWindowSize().y / 2, joystick);
         ArrayList<Bullet> bullets = new ArrayList<>();
         Bullet bullet;
-        /*ArrayList<Enemie> enemies = new ArrayList<>();
-        ArrayList<Present> presents = new ArrayList<>();
-        Enimie enimie;
+        ArrayList<Enemie> enemies = new ArrayList<>();
+        Enemie enimie;
+        /*ArrayList<Present> presents = new ArrayList<>();
         Present present;*/
         Random random = new Random();
         while (!stop) {
             Log.d("LogApp", "game Go");
-           /* if (enemies.isEmpty() || random.nextInt() % 20 < Player.getScore100())
-                switch (random.nextGaussian() % 3) {
+            if ((enemies.size() < 1) /*&& (enemies.isEmpty() ||
+                    (random.nextInt() % 400) < player.getScore100())*/)
+                /*switch (random.nextGaussian() % 3) {
                     case 0: { enemies.add(new Enimie()); break;}
                     case 1: { enemies.add(new Enimie()); break;}
                     case 2: { enemies.add(new Enimie()); break;}
                 }*/
+                enemies.add(new Major(20, 30));/*(new Major(random.nextInt() % 2 == 1 ? 0 : GameScreen.getWindowSize().x,
+                        GeneralAnimation.minYAnimatPos + random.nextInt() %
+                        (GameScreen.getWindowSize().y - GeneralAnimation.maxYAnimatPos)));*/
             canva = gameScreen.getCanvas();
-            bullets.addAll((java.util.Collection<? extends Bullet>) player.action(canva));
-           /* presents.addAll(mrCat.action(canva));
+            bullets.addAll(player.action(canva));
+           // presents.addAll(mrCat.action(canva));
             for(int i = 0; i < enemies.size(); ++i) {
                 enimie = enemies.get(i);
-                bullets.addAll(enimie.action(canva));
-                if (!enimie.isAlive(bullets)) {
+                bullets.addAll(enimie.action(canva, player));
+                if (!enimie.isAlive(bullets, player)) {
                     enemies.remove(i);
                     i--;
                 }
             }
-            for(int i = 0; i < presents.size(); ++i) {
+            /*for(int i = 0; i < presents.size(); ++i) {
                 present = presents.get(i);
                 if (present.takes(player))
                     i--;
                 else presents.draw(canva);
             }*/
-            if (!player.isAlive(bullets))
+            if (!player.isAlive(bullets)) {
+                canva.drawText("Game Over", (float) (GameScreen.getWindowSize().x / 2 -
+                        GameScreen.getWindowSize().x / 4.8),
+                        GameScreen.getWindowSize().y / 2, paint);
                 stopGame(); //---
+            }
             for(int i = 0; i < bullets.size(); ++i) {
                 bullet = bullets.get(i);
                 if (!bullet.draw(canva)) {

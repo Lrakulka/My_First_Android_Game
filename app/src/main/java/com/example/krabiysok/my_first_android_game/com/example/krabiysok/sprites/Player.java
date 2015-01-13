@@ -18,9 +18,9 @@ import java.util.ArrayList;
  */
 public class Player extends GeneralAnimation {
     private static final int HEALTH = 200, SPEED = 500 / GameProcess.fps,
-            ACCELER_TIME = 30000 / GameProcess.fps, ACCELERATION = 2;
+            ACCELER_TIME = 100 / GameProcess.fps, ACCELERATION = 2;
     private Joystick joystick;
-    private int health = HEALTH, accelerTime = ACCELER_TIME;
+    private int health = HEALTH, accelerTime = ACCELER_TIME, score;
     private ArrayList<Weapon> weapons;
     private ArrayList<Bullet> playerBullets;
     private Weapon weapon;
@@ -54,7 +54,7 @@ public class Player extends GeneralAnimation {
             if (weapon.getAmmo() <= 0) {
                 weapons.remove(i);
                 i--;
-            } break;
+            } else break;
         }
         if (weapon.getReloudTime() < weapon.getBulletReloud())
             weapon.reloud();
@@ -72,21 +72,23 @@ public class Player extends GeneralAnimation {
     public boolean isAlive(ArrayList<Bullet> bullets) {
         for(int i = 0; i < bullets.size(); i++) {
             bullet = bullets.get(i);
-            playerX0 = getPosition().x;
-            playerY0 = getPosition().y;
-            bulletX0 = bullet.getPosition().x;
-            bulletY0 = bullet.getPosition().y;
-            playerX1 = playerX0 + getSpriteResolution().x;
-            playerY1 = playerY0 + getSpriteResolution().y;
-            bulletX1 = bulletX0 + bullet.getSpriteResolution().x;
-            bulletY1 = bulletY0 + bullet.getSpriteResolution().y;
-            if ((bulletX0 >= playerX0 && bulletX1 <= playerX0 &&
-                    bulletY0 >= playerY0 && bulletY1 <= playerY0) ||
-                    (bulletX0 >= playerX1 && bulletX1 <= playerX1 &&
-                            bulletY0 >= playerY1 && bulletY1 <= playerY1)) {
-                health -= bullet.getDamage();
-                bullets.remove(i);
-                i--;
+            if (!bullet.getBulletBelongs().equals(this)) {
+                playerX0 = getPosition().x;
+                playerY0 = getPosition().y;
+                bulletX0 = bullet.getPosition().x;
+                bulletY0 = bullet.getPosition().y;
+                playerX1 = playerX0 + getSpriteResolution().x;
+                playerY1 = playerY0 + getSpriteResolution().y;
+                bulletX1 = bulletX0 + bullet.getSpriteResolution().x;
+                bulletY1 = bulletY0 + bullet.getSpriteResolution().y;
+                if ((bulletX0 <= playerX0 && playerX0 <= bulletX1 &&
+                        bulletY0 <= playerY0 && playerY0 <= bulletY1) ||
+                        (bulletX0 <= playerX1 && playerX1 <= bulletX1 &&
+                                bulletY0 <= playerY1 && playerY1 <= bulletY1)) {
+                    health -= bullet.getDamage();
+                    bullets.remove(i);
+                    i--;
+                }
             }
         }
         if (health <= 0)
@@ -100,5 +102,18 @@ public class Player extends GeneralAnimation {
 
     public Weapon getWeapon() {
         return weapon;
+    }
+
+    public int getScore100() {
+        int score100 = score / 100;
+        return score100 == 0 ? 1 : score100;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public void addScore(int points) {
+        score += points;
     }
 }

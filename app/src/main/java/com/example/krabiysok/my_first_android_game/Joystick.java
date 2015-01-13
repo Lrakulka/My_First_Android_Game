@@ -202,4 +202,17 @@ public class Joystick  {
                 (2 * a * 10));
         return result;
     }
+
+    public static Double getAngleBetween(Point src, Point target) {
+        if (target == null || src == null)
+            return null;
+        double a = Math.pow(Math.pow(src.x - target.x, 2) +
+                Math.pow(src.y - target.y, 2), 0.5),
+                c = Math.pow(Math.pow(src.x - target.x, 2) + Math.pow(src.y -
+                        10 - target.y, 2), 0.5);
+        Double result = target.x < src.x ? PI2 - Math.acos((a * a + 10 * 10 -
+                c * c) / (2 * a * 10)) : Math.acos((a * a + 10 * 10 - c * c) /
+                (2 * a * 10));
+        return result;
+    }
 }

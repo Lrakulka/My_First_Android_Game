@@ -146,20 +146,16 @@ public class GeneralAnimation {
 
         // Protect from going beyond game screen
         maxXAnimatPos = GameScreen.getWindowSize().x - this.spriteResolution.x;
-        if (position.x < minXAnimatPos) {
-            position.x = minXAnimatPos;
+        if (position.x < minXAnimatPos - 20) {
             resultOfAnimMove = false;
         }
-        if (position.x > maxXAnimatPos) {
-            position.x = maxXAnimatPos;
+        if (position.x > maxXAnimatPos + 20) {
             resultOfAnimMove = false;
         }
-        if (position.y > maxYAnimatPos) {
-            position.y = maxYAnimatPos;
+        if (position.y > maxYAnimatPos + 20) {
             resultOfAnimMove = false;
         }
         if (position.y < minYAnimatPos) {
-            position.y = minYAnimatPos;
             resultOfAnimMove = false;
         }
         spriteResolution.x = (int) (spriteNormalResolution.x *
