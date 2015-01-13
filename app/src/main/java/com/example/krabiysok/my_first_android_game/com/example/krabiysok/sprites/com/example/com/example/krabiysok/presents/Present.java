@@ -24,8 +24,8 @@ abstract public class Present {
         float p = GameScreen.getWindowSize().y * RATIO;
         size = new Point((int) ((image.getWidth() * p) / 
                 image.getHeight()), (int) p);
-        dst = new Rect(x, y, (int) (x + image.getWidth() * ((float) position.y /
-                        GameScreen.getWindowSize().y)), (int) (y + image.getHeight() *
+        dst = new Rect(x, y, (int) (x + size.x * ((float) position.y /
+                        GameScreen.getWindowSize().y)), (int) (y + size.y *
                 ((float) position.y / GameScreen.getWindowSize().y)));
     }
     

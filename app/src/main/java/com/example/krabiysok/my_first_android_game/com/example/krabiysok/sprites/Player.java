@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class Player extends GeneralAnimation {
     private static final int HEALTH = 1000, SPEED = 1000 / GameProcess.fps,
-            ACCELER_TIME = 1000 / GameProcess.fps, ACCELERATION = 4;
+            ACCELER_TIME = 10000 / GameProcess.fps, ACCELERATION = 2;
     private Joystick joystick;
     private int health = HEALTH, accelerTime = ACCELER_TIME, score;
     private ArrayList<Weapon> weapons;
@@ -120,6 +120,15 @@ public class Player extends GeneralAnimation {
         this.health += health;
         if (this.health >= HEALTH) {
             this.health = HEALTH;
+            return false;
+        }
+        return true;
+    }
+
+    public boolean addAccelerationTime(int accelerationTime) {
+        this.accelerTime += accelerationTime;
+        if (this.accelerTime >= ACCELER_TIME) {
+            this.accelerTime = ACCELER_TIME;
             return false;
         }
         return true;

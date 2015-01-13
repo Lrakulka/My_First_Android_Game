@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.Player;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.MrCat;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.com.example.krabiysok.presents.Present;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Enemie;
@@ -63,6 +64,7 @@ public class GameProcess implements Runnable {
         Enemie enimie;
         MyArrayList<Present> presents = new MyArrayList<>();
         Present present;
+        MrCat mrCat = new MrCat();
         Random random = new Random();
         int randomAbsInt, x, y;
         while (!stop) {
@@ -92,7 +94,7 @@ public class GameProcess implements Runnable {
             }
             canva = gameScreen.getCanvas();
             bullets.addAll(player.action(canva));
-            presents.addAll(mrCat.action(canva));
+            presents.add(mrCat.action(canva, randomAbsInt));
             for(int i = 0; i < enemies.size(); ++i) {
                 enimie = enemies.get(i);
                 bullets.addAll(enimie.action(canva, player));

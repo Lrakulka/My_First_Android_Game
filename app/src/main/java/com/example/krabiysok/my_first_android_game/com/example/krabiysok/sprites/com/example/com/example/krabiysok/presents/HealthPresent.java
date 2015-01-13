@@ -13,7 +13,7 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
 public class HealthPresent extends Present{
     private static final int HEALTH = 250;
 
-    HealthPresent(int x, int y) {
+    public HealthPresent(int x, int y) {
         super(BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
                 R.drawable.health_present), x, y);
     }

@@ -13,4 +13,11 @@ public class MyArrayList<E> extends ArrayList<E> {
             return super.addAll(collection);
         return false;
     }
+
+    @Override
+    public boolean add(E object) {
+        if (object != null)
+            return super.add(object);
+        return false;
+    }
 }
