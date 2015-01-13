@@ -14,6 +14,6 @@ public class Major extends Enemie {
     public Major(int x, int y) {
         super(x, y,
                 BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
-                        R.drawable.major), 100, (int) (200 / GameProcess.fps), 0, 0);
+                        R.drawable.major), 100, (int) (300 / GameProcess.fps), 0, 0);
     }
 }

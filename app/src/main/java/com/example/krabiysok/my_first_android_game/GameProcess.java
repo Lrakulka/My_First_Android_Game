@@ -9,6 +9,7 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Enemie;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Major;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapons.SpecialWeapon;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -18,7 +19,7 @@ import java.util.Random;
  * Created by KrabiySok on 1/10/2015.
  */
 public class GameProcess implements Runnable {
-    public static final int fps = 50; // Speed of updates
+    public static final int fps = 100; // Speed of updates
     private static GameProcess gameProcess = new GameProcess();
     private GameScreen gameScreen;
     private Joystick joystick;
@@ -59,7 +60,7 @@ public class GameProcess implements Runnable {
         Enemie enimie;
         /*ArrayList<Present> presents = new ArrayList<>();
         Present present;*/
-        Random random = new Random();
+        player.addWeapon(new SpecialWeapon());
         while (!stop) {
             Log.d("LogApp", "game Go");
             if ((enemies.size() < 1) /*&& (enemies.isEmpty() ||
@@ -91,13 +92,13 @@ public class GameProcess implements Runnable {
             }*/
             if (!player.isAlive(bullets)) {
                 canva.drawText("Game Over", (float) (GameScreen.getWindowSize().x / 2 -
-                        GameScreen.getWindowSize().x / 4.8),
+                        GameScreen.getWindowSize().x / 5),
                         GameScreen.getWindowSize().y / 2, paint);
                 stopGame(); //---
             }
             for(int i = 0; i < bullets.size(); ++i) {
                 bullet = bullets.get(i);
-                if (!bullet.draw(canva)) {
+                if (!bullet.drawMove(canva)) {
                     bullets.remove(i);
                     i--;
                 }

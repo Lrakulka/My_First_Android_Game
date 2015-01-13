@@ -46,14 +46,15 @@ public class Enemie extends GeneralAnimation {
             }
         }
         drawMove(canva, enemieAngle, moveSpeed);
-        if (weapon.getReloudTime() < weapon.getBulletReloud())
-            weapon.reloud();
-        enemieBullets.clear();
-        if (weapon.getReloudTime() == weapon.getBulletReloud()) {
-            weapon.startReloud();
-            enemieBullets.add(weapon.getBullet(getPosition().x, getPosition().y,
-                    this, enemieAngle));
-            return enemieBullets;
+        if (weapon.getAmmo() > 0) {
+            if (weapon.getReloudTime() < weapon.getBulletReloud())
+                weapon.reloud();
+            enemieBullets.clear();
+            if (weapon.getReloudTime() == weapon.getBulletReloud()) {
+                weapon.startReloud();
+                enemieBullets.add(weapon.getBullet(getPosition().x, getPosition().y,
+                        this, enemieAngle));
+            }
         }
         return enemieBullets;
     }

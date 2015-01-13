@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class Player extends GeneralAnimation {
     private static final int HEALTH = 200, SPEED = 500 / GameProcess.fps,
-            ACCELER_TIME = 100 / GameProcess.fps, ACCELERATION = 2;
+            ACCELER_TIME = 1000 / GameProcess.fps, ACCELERATION = 2;
     private Joystick joystick;
     private int health = HEALTH, accelerTime = ACCELER_TIME, score;
     private ArrayList<Weapon> weapons;
@@ -49,23 +49,22 @@ public class Player extends GeneralAnimation {
             }
         }
         drawMove(canva, playerAngle, moveSpeed);
-        for(int i = 0; i < weapons.size(); i++) {
+        for (int i = weapons.size() - 1; ; i--) {
             weapon = weapons.get(i);
-            if (weapon.getAmmo() <= 0) {
+            if (weapon.getAmmo() <= 0 && i > 0) {
                 weapons.remove(i);
                 i--;
             } else break;
         }
         if (weapon.getReloudTime() < weapon.getBulletReloud())
-            weapon.reloud();
-        playerBullets.clear();
-        if (joystick.getAimPosition() != null &&
-                weapon.getReloudTime() == weapon.getBulletReloud()) {
-            weapon.startReloud();
-            playerBullets.add(weapon.getBullet(getPosition().x, getPosition().y,
-                    this, joystick.getAimAngle(getPosition())));
-            return playerBullets;
-        }
+                weapon.reloud();
+            playerBullets.clear();
+            if (joystick.getAimPosition() != null &&
+                    weapon.getReloudTime() == weapon.getBulletReloud()) {
+                weapon.startReloud();
+                playerBullets.add(weapon.getBullet(getPosition().x, getPosition().y,
+                        this, joystick.getAimAngle(getPosition())));
+            }
         return playerBullets;
     }
 

@@ -12,18 +12,18 @@ import com.example.krabiysok.my_first_android_game.GameScreen;
  * Created by KrabiySok on 12/30/2014.
  */
 public class GeneralAnimation {
-    private static final double angle45 = Math.PI / 4, angle135 = Math.PI - angle45,
+    public static final double angle45 = Math.PI / 4, angle135 = Math.PI - angle45,
             angle225 = Math.PI + angle45, angle315 = Math.PI + 2 * angle45,
             PI360 = Math.PI * 2, PI90 = Math.PI / 2, PI270 = PI90 + Math.PI;
-    private int rows, columns, newXPosition, newYPosition, maxXAnimatPos, maxYAnimatPos,
+    protected int rows, columns, newXPosition, newYPosition, maxXAnimatPos, maxYAnimatPos,
             minXAnimatPos, minYAnimatPos;
-    private Bitmap sprite, bulletSprite;
-    private Rect src, dst;
-    private Point bmpRezolution, spriteResolution, position, spriteNormalResolution;
+    protected Bitmap sprite, bulletSprite;
+    protected Rect src, dst;
+    protected Point bmpRezolution, spriteResolution, position, spriteNormalResolution;
     private double angle;
     private byte forward, back, left, right;
-    private boolean resultOfAnimMove;
-    private Matrix matrix;
+    protected boolean resultOfAnimMove;
+    protected Matrix matrix;
 
     protected GeneralAnimation(int x, int y, int rows, int columns, Bitmap sprite,
                                double spriteRatioHieght) {
@@ -113,67 +113,7 @@ public class GeneralAnimation {
         return resultOfAnimMove;
     }
 
-    //No bullet animation
-    // Rotate bullet from last raw.
-    public boolean drawBulletMove(Canvas canva, Double moveAngle, int distance) {
-        resultOfAnimMove = true;
-        if (moveAngle != null) {
-            if (moveAngle > Math.PI)
-                angle = PI360 - moveAngle;
-            else angle = moveAngle;
-            if (angle > PI90)
-                angle = Math.PI - angle;
-            newYPosition = (int) (distance * Math.cos(angle));
-            newXPosition = (int) (distance * Math.sin(angle));
-
-            if (moveAngle > angle315 || moveAngle <= angle45) {
-                position.y -= newYPosition;
-                position.x += moveAngle > angle315 ? -newXPosition : newXPosition;
-            }
-            else if (moveAngle > angle45 && moveAngle <= angle135) {
-                position.x += newXPosition;
-                position.y += moveAngle > PI90 ? newYPosition : -newYPosition;
-            }
-            else if (moveAngle > angle135 && moveAngle <= angle225) {
-                position.y += newYPosition;
-                position.x += moveAngle > Math.PI ? -newXPosition : newXPosition;
-            }
-            else if (moveAngle > angle225 && moveAngle <= angle315) {
-                position.x -= newXPosition;
-                position.y += moveAngle > PI270 ? -newYPosition : newYPosition;
-            }
-        }
-
-        // Protect from going beyond game screen
-        maxXAnimatPos = GameScreen.getWindowSize().x - this.spriteResolution.x;
-        if (position.x < minXAnimatPos - 20) {
-            resultOfAnimMove = false;
-        }
-        if (position.x > maxXAnimatPos + 20) {
-            resultOfAnimMove = false;
-        }
-        if (position.y > GameScreen.getWindowSize().y + 20) {
-            resultOfAnimMove = false;
-        }
-        if (position.y < minYAnimatPos) {
-            resultOfAnimMove = false;
-        }
-        spriteResolution.x = (int) (spriteNormalResolution.x *
-                ((float) position.y / GameScreen.getWindowSize().y));
-        spriteResolution.y = (int) (spriteNormalResolution.y *
-                ((float)position.y / GameScreen.getWindowSize().y));
-        dst.set(position.x, position.y, position.x + (int) (spriteResolution.x ),
-                position.y + (int) (spriteResolution.y ));
-
-        matrix.setTranslate(dst.centerX(), dst.centerY());
-        matrix.preRotate((float) (moveAngle * 57.296));
-        bulletSprite = Bitmap.createBitmap(sprite, 0, bmpRezolution.y * (rows - 1),
-                bmpRezolution.x, bmpRezolution.y, matrix, true);
-        canva.drawBitmap(bulletSprite, src, dst, null);
-        return resultOfAnimMove;
-    }
-
-    private void moveForward() {
+   private void moveForward() {
         back = left = right = 0;
         if ( forward >= columns) {
             forward = 0;

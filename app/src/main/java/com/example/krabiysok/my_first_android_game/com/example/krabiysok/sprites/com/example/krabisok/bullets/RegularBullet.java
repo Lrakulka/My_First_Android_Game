@@ -15,7 +15,7 @@ public class RegularBullet extends Bullet {
     public RegularBullet(int x, int y, GeneralAnimation bulletBelongs, double angle) {
         super(x, y, 4, 4,
                 BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
-                        R.drawable.regular_bullet), 0.15, 20, 1000 / GameProcess.fps,
+                        R.drawable.regular_bullet), 0.15, 20, 2000 / GameProcess.fps,
                 angle, bulletBelongs);
     }
 }

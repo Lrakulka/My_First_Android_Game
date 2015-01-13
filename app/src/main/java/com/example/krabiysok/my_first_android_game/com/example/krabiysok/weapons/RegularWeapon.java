@@ -15,7 +15,7 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
 public class RegularWeapon extends Weapon {
 
     public RegularWeapon() {
-        super(300 / GameProcess.fps, 999, BitmapFactory.decodeResource(
+        super(3000 / GameProcess.fps, 999, BitmapFactory.decodeResource(
                 MainActivity.getContext().getResources(), R.drawable.regular_weapon));
     }
 

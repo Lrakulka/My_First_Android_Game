@@ -149,11 +149,18 @@ public class Joystick  {
         public Double getDirectionStick() {
             if (xDotStick == null || yDotStick == null)
                 return null;
-            double a = Math.pow(Math.pow(x - xDotStick, 2) + Math.pow(y - yDotStick, 2), 0.5),
-                    c = Math.pow(Math.pow(x - xDotStick, 2) + Math.pow(y - rBig - yDotStick, 2), 0.5);
-            Double result = xDotStick < x ? PI2 - Math.acos((a * a + rBig * rBig -
-                    c * c) / (2 * a * rBig)) : Math.acos((a * a + rBig * rBig - c * c) /
-                    (2 * a * rBig));
+            double a, c, result;
+            // Exception NullPointer ?
+            try {
+                a = Math.pow(Math.pow(x - xDotStick, 2) + Math.pow(y - yDotStick, 2), 0.5);
+                c = Math.pow(Math.pow(x - xDotStick, 2) + Math.pow(y - rBig - yDotStick, 2), 0.5);
+                result = xDotStick < x ? PI2 - Math.acos((a * a + rBig * rBig -
+                        c * c) / (2 * a * rBig)) : Math.acos((a * a + rBig * rBig - c * c) /
+                        (2 * a * rBig));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
             return result;
         }
 
