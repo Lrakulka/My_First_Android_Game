@@ -13,7 +13,7 @@ import android.view.SurfaceView;
  * Created by KrabiySok on 1/6/2015.
  */
 public class GameScreen {
-
+    public static int GAME_SCREEN_HEIGHT_MIN, GAME_SCREEN_HEIGHT_MAX;
     private SurfaceView windowSurface;
     private Context context;
     private Bitmap backGround;
@@ -34,6 +34,8 @@ public class GameScreen {
                 setBackGround(generateBackGround(R.drawable.back_ground));
                 windowSize.x = windowSurface.getWidth();
                 windowSize.y = windowSurface.getHeight();
+                GameScreen.GAME_SCREEN_HEIGHT_MAX = GameScreen.getWindowSize().y;
+                GameScreen.GAME_SCREEN_HEIGHT_MIN = (int) (GameScreen.getWindowSize().y * 0.25);
                 draw(getCanvas());
             }
 

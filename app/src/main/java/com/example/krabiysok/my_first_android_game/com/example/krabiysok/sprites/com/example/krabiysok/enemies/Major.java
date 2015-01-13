@@ -6,6 +6,9 @@ import android.graphics.BitmapFactory;
 import com.example.krabiysok.my_first_android_game.GameProcess;
 import com.example.krabiysok.my_first_android_game.MainActivity;
 import com.example.krabiysok.my_first_android_game.R;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapons.MajorWeapon;
+
+import java.util.ArrayList;
 
 /**
  * Created by KrabiySok on 1/13/2015.
@@ -15,5 +18,7 @@ public class Major extends Enemie {
         super(x, y,
                 BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
                         R.drawable.major), 100, (int) (300 / GameProcess.fps), 0, 0);
+        enemieBullets = new ArrayList<>();
+        weapon = new MajorWeapon();
     }
 }

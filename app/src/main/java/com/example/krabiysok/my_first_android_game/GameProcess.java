@@ -6,9 +6,11 @@ import android.graphics.Paint;
 import android.util.Log;
 
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.Player;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.com.example.krabiysok.presents.Present;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Enemie;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Major;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Sucub;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapons.SpecialWeapon;
 
 import java.util.ArrayList;
@@ -52,30 +54,45 @@ public class GameProcess implements Runnable {
     @Override
     public void run() {
         Canvas canva;
+        int currentFPS = fps;
         Player player = new Player(gameScreen.getWindowSize().x / 2,
                 gameScreen.getWindowSize().y / 2, joystick);
-        ArrayList<Bullet> bullets = new ArrayList<>();
+        MyArrayList<Bullet> bullets = new MyArrayList<>();
         Bullet bullet;
         ArrayList<Enemie> enemies = new ArrayList<>();
         Enemie enimie;
-        /*ArrayList<Present> presents = new ArrayList<>();
-        Present present;*/
-        player.addWeapon(new SpecialWeapon());
+        MyArrayList<Present> presents = new MyArrayList<>();
+        Present present;
+        Random random = new Random();
+        int randomAbsInt, x, y;
         while (!stop) {
             Log.d("LogApp", "game Go");
-            if ((enemies.size() < 1) /*&& (enemies.isEmpty() ||
-                    (random.nextInt() % 400) < player.getScore100())*/)
-                /*switch (random.nextGaussian() % 3) {
-                    case 0: { enemies.add(new Enimie()); break;}
-                    case 1: { enemies.add(new Enimie()); break;}
-                    case 2: { enemies.add(new Enimie()); break;}
-                }*/
-                enemies.add(new Major(20, 30));/*(new Major(random.nextInt() % 2 == 1 ? 0 : GameScreen.getWindowSize().x,
-                        GeneralAnimation.minYAnimatPos + random.nextInt() %
-                        (GameScreen.getWindowSize().y - GeneralAnimation.maxYAnimatPos)));*/
+            if (player.getScore100() > currentFPS)
+                currentFPS = fps - player.getScore100();
+            randomAbsInt = (Math.abs(random.nextInt()) % fps);
+            if ((enemies.size() < 7) && (enemies.isEmpty() ||
+                    randomAbsInt < player.getScore100())) {
+                x = randomAbsInt % 2 == 1 ? 0 : GameScreen.getWindowSize().x;
+                y = GameScreen.GAME_SCREEN_HEIGHT_MIN + randomAbsInt %
+                        (GameScreen.getWindowSize().y - GameScreen.GAME_SCREEN_HEIGHT_MIN);
+                switch (randomAbsInt % 3) {
+                    case 0: {
+                        enemies.add(new Major(x, y));
+                        break;
+                    }
+                    case 1: {
+                        enemies.add(new Sucub(x, y));
+                        break;
+                    }
+                    case 2: {
+                        enemies.add(new Sucub(x, y));
+                        break;
+                    }
+                }
+            }
             canva = gameScreen.getCanvas();
             bullets.addAll(player.action(canva));
-           // presents.addAll(mrCat.action(canva));
+            presents.addAll(mrCat.action(canva));
             for(int i = 0; i < enemies.size(); ++i) {
                 enimie = enemies.get(i);
                 bullets.addAll(enimie.action(canva, player));
@@ -84,12 +101,14 @@ public class GameProcess implements Runnable {
                     i--;
                 }
             }
-            /*for(int i = 0; i < presents.size(); ++i) {
+            for(int i = 0; i < presents.size(); ++i) {
                 present = presents.get(i);
-                if (present.takes(player))
+                if (present.takes(player)) {
+                    presents.remove(i);
                     i--;
-                else presents.draw(canva);
-            }*/
+                }
+                else present.draw(canva);
+            }
             if (!player.isAlive(bullets)) {
                 canva.drawText("Game Over", (float) (GameScreen.getWindowSize().x / 2 -
                         GameScreen.getWindowSize().x / 5),
@@ -105,7 +124,9 @@ public class GameProcess implements Runnable {
             }
             gameScreen.draw(canva);
             try {
-                Thread.sleep(fps);
+                if (currentFPS < 20)
+                    Thread.sleep(30); // I did so specifically
+                else Thread.sleep(currentFPS);
                 if (sleepGame)
                     synchronized (gameThread) {
                         gameThread.wait();

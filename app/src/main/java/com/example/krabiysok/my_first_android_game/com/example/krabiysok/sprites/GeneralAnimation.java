@@ -44,8 +44,8 @@ public class GeneralAnimation {
         matrix = new Matrix();
         forward = back = left = right = 0;
         maxXAnimatPos = GameScreen.getWindowSize().x - this.spriteNormalResolution.x;
-        maxYAnimatPos = GameScreen.getWindowSize().y - this.spriteNormalResolution.y;
-        minYAnimatPos = (int) (GameScreen.getWindowSize().y * 0.25);
+        maxYAnimatPos = GameScreen.GAME_SCREEN_HEIGHT_MAX - this.spriteNormalResolution.y;
+        minYAnimatPos = GameScreen.GAME_SCREEN_HEIGHT_MIN;
         minXAnimatPos = 0;
         this.spriteResolution = new Point(spriteNormalResolution);
     }

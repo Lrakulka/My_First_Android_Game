@@ -14,7 +14,7 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  */
 public class MajorWeapon extends Weapon {
     public MajorWeapon() {
-        super(5000 / GameProcess.fps, 1000, BitmapFactory.decodeResource(
+        super(4000 / GameProcess.fps, 1000, BitmapFactory.decodeResource(
                 MainActivity.getContext().getResources(), R.drawable.major_weapon));
     }
 

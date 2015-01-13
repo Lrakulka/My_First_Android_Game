@@ -17,12 +17,12 @@ import java.util.ArrayList;
  * Created by KrabiySok on 1/13/2015.
  */
 public class Enemie extends GeneralAnimation {
-    private int health, accelerTime, speed, acceleration, acceler_time;
-    private ArrayList<Bullet> enemieBullets;
-    private Weapon weapon;
-    private Bullet bullet;
-    private Double enemieAngle;
-    private int moveSpeed, enemieX0, enemieX1, enemieY0, enemieY1,
+    protected int health, accelerTime, speed, acceleration, acceler_time;
+    protected ArrayList<Bullet> enemieBullets;
+    protected Weapon weapon;
+    protected Bullet bullet;
+    protected Double enemieAngle;
+    protected int moveSpeed, enemieX0, enemieX1, enemieY0, enemieY1,
             bulletX0, bulletX1, bulletY0, bulletY1;
 
     public Enemie(int x, int y, Bitmap enemieSprite, int health,
@@ -32,8 +32,6 @@ public class Enemie extends GeneralAnimation {
         this.speed = speed;
         this.acceler_time = acceler_time;
         this.acceleration = acceleration;
-        enemieBullets = new ArrayList<>();
-        weapon = new MajorWeapon();
     }
 
     public ArrayList<Bullet> action(Canvas canva, Player player) {

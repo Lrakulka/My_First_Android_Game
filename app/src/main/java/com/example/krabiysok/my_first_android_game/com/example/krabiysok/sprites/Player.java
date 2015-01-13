@@ -17,8 +17,8 @@ import java.util.ArrayList;
  * Created by KrabiySok on 1/10/2015.
  */
 public class Player extends GeneralAnimation {
-    private static final int HEALTH = 200, SPEED = 500 / GameProcess.fps,
-            ACCELER_TIME = 1000 / GameProcess.fps, ACCELERATION = 2;
+    private static final int HEALTH = 1000, SPEED = 1000 / GameProcess.fps,
+            ACCELER_TIME = 1000 / GameProcess.fps, ACCELERATION = 4;
     private Joystick joystick;
     private int health = HEALTH, accelerTime = ACCELER_TIME, score;
     private ArrayList<Weapon> weapons;
@@ -105,11 +105,24 @@ public class Player extends GeneralAnimation {
 
     public int getScore100() {
         int score100 = score / 100;
-        return score100 == 0 ? 1 : score100;
+        return score100;
     }
 
     public int getScore() {
         return score;
+    }
+
+    public void takeHealth(int take) {
+        health -= take;
+    }
+
+    public boolean addHealth(int health) {
+        this.health += health;
+        if (this.health >= HEALTH) {
+            this.health = HEALTH;
+            return false;
+        }
+        return true;
     }
 
     public void addScore(int points) {
