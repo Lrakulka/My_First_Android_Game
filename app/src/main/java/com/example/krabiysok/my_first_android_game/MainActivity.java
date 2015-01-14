@@ -32,11 +32,11 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.main_layout);
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            setContentView(R.layout.main_layout);
             gameScreen = new GameScreen((SurfaceView) findViewById(R.id.gameScreen), this);
             joystick = new Joystick((SurfaceView) findViewById(R.id.joystick),
                     (SurfaceView) findViewById(R.id.gameScreen));
