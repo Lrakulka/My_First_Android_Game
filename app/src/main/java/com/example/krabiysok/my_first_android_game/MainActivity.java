@@ -1,31 +1,26 @@
 package com.example.krabiysok.my_first_android_game;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
-import android.graphics.Rect;
 import android.os.Bundle;
-import android.text.Layout;
+import android.os.Handler;
 import android.util.Log;
-import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-
+import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 public class MainActivity extends Activity {
+    public static final int HEALTH_CHANGED = 0, WEAPON_CHANGED = 1, AMMO_CHANGED = 2,
+            SCORE_CHANGED = 3;
     private GameScreen gameScreen;
     private Joystick joystick;
     private GameProcess gameProcess;
-    private static Context context;
+    private static MainActivity context;
+    private static Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +33,38 @@ public class MainActivity extends Activity {
                     WindowManager.LayoutParams.FLAG_FULLSCREEN);
             setContentView(R.layout.main_layout);
             gameScreen = new GameScreen((SurfaceView) findViewById(R.id.gameScreen), this);
-            joystick = new Joystick((SurfaceView) findViewById(R.id.joystick),
+            joystick = new Joystick((SurfaceView) findViewById(R.id.joystickRight),
                     (SurfaceView) findViewById(R.id.gameScreen));
             gameProcess = GameProcess.getGameProcess(gameScreen, joystick);
             context = this;
+            handler = new Handler() {
+                public void handleMessage(android.os.Message msg) {
+                    switch (msg.what) {
+                        case HEALTH_CHANGED:
+                            ((ProgressBar) MainActivity.getContext().findViewById(R.id.health)).
+                                    setProgress(msg.arg1);
+                            ((ProgressBar) MainActivity.getContext().findViewById(R.id.energe)).
+                                    setProgress(msg.arg2);
+                            break;
+                        case WEAPON_CHANGED:
+                            ((ImageView) MainActivity.getContext().findViewById(R.id.weapons)).
+                                    setImageResource(msg.arg1);
+                            if (msg.arg2 > 0)
+                                ((TextView) MainActivity.getContext().
+                                        findViewById(R.id.weaponAmmo)).
+                                        setText("Ammo " + String.valueOf(msg.arg2));
+                            break;
+                        case AMMO_CHANGED:
+                            ((TextView) MainActivity.getContext().findViewById(R.id.weaponAmmo)).
+                                    setText("Ammo " + String.valueOf(msg.arg1));
+                            break;
+                        case SCORE_CHANGED:
+                            ((TextView) MainActivity.getContext().findViewById(R.id.gameScore)).
+                                    setText("Score " + String.valueOf(msg.arg1));
+                            break;
+                    }
+                };
+            };
         }
     }
 
@@ -67,7 +90,11 @@ public class MainActivity extends Activity {
             gameProcess.stopGame();
     }
 
-    public static Context getContext() {
+    public static MainActivity getContext() {
         return context;
+    }
+
+    public static Handler getHandler() {
+        return handler;
     }
 }

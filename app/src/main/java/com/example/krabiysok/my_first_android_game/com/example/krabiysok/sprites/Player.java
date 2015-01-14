@@ -2,6 +2,9 @@ package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprite
 
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.os.Message;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.krabiysok.my_first_android_game.GameProcess;
 import com.example.krabiysok.my_first_android_game.Joystick;
@@ -28,6 +31,7 @@ public class Player extends GeneralAnimation {
     private Double playerAngle;
     private int moveSpeed, playerX0, playerX1, playerY0, playerY1,
             bulletX0, bulletX1, bulletY0, bulletY1;
+    private Message msg;
 
     public Player(int x, int y, Joystick joystick) {
         super(x, y, 4, 3,
@@ -37,6 +41,13 @@ public class Player extends GeneralAnimation {
         this.joystick = joystick;
         weapons = new ArrayList<>();
         weapons.add(new RegularWeapon());
+        weapon = weapons.get(0);
+        msg = MainActivity.getHandler().
+                obtainMessage(MainActivity.SCORE_CHANGED, score, 0);
+        MainActivity.getHandler().sendMessage(msg);
+        msg = MainActivity.getHandler().
+                obtainMessage(MainActivity.WEAPON_CHANGED, weapon.getWeapon(), weapon.getAmmo());
+        MainActivity.getHandler().sendMessage(msg);
     }
 
     public ArrayList<Bullet> action(Canvas canva) {
@@ -50,21 +61,32 @@ public class Player extends GeneralAnimation {
         }
         drawMove(canva, playerAngle, moveSpeed);
         for (int i = weapons.size() - 1; ; i--) {
-            weapon = weapons.get(i);
-            if (weapon.getAmmo() <= 0 && i > 0) {
+            if (weapons.get(i).getAmmo() <= 0 && i != 0) {
                 weapons.remove(i);
-                i--;
-            } else break;
-        }
-        if (weapon.getReloudTime() < weapon.getBulletReloud())
-                weapon.reloud();
-            playerBullets.clear();
-            if (joystick.getAimPosition() != null &&
-                    weapon.getReloudTime() == weapon.getBulletReloud()) {
-                weapon.startReloud();
-                playerBullets.add(weapon.getBullet(getPosition().x, getPosition().y,
-                        this, joystick.getAimAngle(getPosition())));
+            } else {
+                if (weapon == null || !weapon.equals(weapons.get(i))) {
+                    weapon = weapons.get(i);
+                    msg = MainActivity.getHandler().
+                         obtainMessage(MainActivity.WEAPON_CHANGED, weapon.getWeapon(),
+                                 weapon.getAmmo());
+                    MainActivity.getHandler().sendMessage(msg);
+                }
+                break;
             }
+        }
+        if (weapon.getReloudTime() < weapon.getBulletReloud()) {
+            weapon.reloud();
+        }
+        playerBullets.clear();
+        if (joystick.getAimPosition() != null &&
+                weapon.getReloudTime() == weapon.getBulletReloud()) {
+            weapon.startReloud();
+            msg = MainActivity.getHandler().
+                    obtainMessage(MainActivity.AMMO_CHANGED, weapon.getAmmo(), weapon.getAmmo());
+            MainActivity.getHandler().sendMessage(msg);
+            playerBullets.add(weapon.getBullet(getPosition().x, getPosition().y,
+                    this, joystick.getAimAngle(getPosition())));
+        }
         return playerBullets;
     }
 
@@ -92,6 +114,9 @@ public class Player extends GeneralAnimation {
         }
         if (health <= 0)
             return false;
+        msg = MainActivity.getHandler().
+                obtainMessage(MainActivity.HEALTH_CHANGED, health, accelerTime);
+        MainActivity.getHandler().sendMessage(msg);
         return true;
     }
 
@@ -136,5 +161,8 @@ public class Player extends GeneralAnimation {
 
     public void addScore(int points) {
         score += points;
+        msg = MainActivity.getHandler().
+                obtainMessage(MainActivity.SCORE_CHANGED, score, 0);
+        MainActivity.getHandler().sendMessage(msg);
     }
 }

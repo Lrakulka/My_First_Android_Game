@@ -160,4 +160,57 @@ public class GeneralAnimation {
     public Point getSpriteResolution() {
         return new Point(spriteResolution);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GeneralAnimation that = (GeneralAnimation) o;
+
+        if (Double.compare(that.angle, angle) != 0) return false;
+        if (back != that.back) return false;
+        if (columns != that.columns) return false;
+        if (forward != that.forward) return false;
+        if (left != that.left) return false;
+        if (resultOfAnimMove != that.resultOfAnimMove) return false;
+        if (right != that.right) return false;
+        if (rows != that.rows) return false;
+        if (!bmpRezolution.equals(that.bmpRezolution)) return false;
+        if (!bulletSprite.equals(that.bulletSprite)) return false;
+        if (!dst.equals(that.dst)) return false;
+        if (matrix != null ? !matrix.equals(that.matrix) : that.matrix != null) return false;
+        if (!sprite.equals(that.sprite)) return false;
+        if (spriteNormalResolution != null ? !spriteNormalResolution.equals(that.spriteNormalResolution) : that.spriteNormalResolution != null)
+            return false;
+        if (spriteResolution != null ? !spriteResolution.equals(that.spriteResolution) : that.spriteResolution != null)
+            return false;
+        if (!src.equals(that.src)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = rows;
+        result = 31 * result + columns;
+        result = 31 * result + sprite.hashCode();
+        result = 31 * result + bulletSprite.hashCode();
+        result = 31 * result + src.hashCode();
+        result = 31 * result + dst.hashCode();
+        result = 31 * result + bmpRezolution.hashCode();
+        result = 31 * result + (spriteResolution != null ? spriteResolution.hashCode() : 0);
+        result = 31 * result + (spriteNormalResolution != null ? spriteNormalResolution.hashCode() : 0);
+        temp = Double.doubleToLongBits(angle);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (int) forward;
+        result = 31 * result + (int) back;
+        result = 31 * result + (int) left;
+        result = 31 * result + (int) right;
+        result = 31 * result + (resultOfAnimMove ? 1 : 0);
+        result = 31 * result + (matrix != null ? matrix.hashCode() : 0);
+        return result;
+    }
 }

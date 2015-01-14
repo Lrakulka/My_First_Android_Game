@@ -8,43 +8,95 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:id="@+id/gameScreen"
-        android:layout_below="@+id/weapons"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
     <SurfaceView
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:id="@+id/joystick"
+        android:id="@+id/joystickRight"
         android:layout_row="1"
         android:layout_column="0"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <SurfaceView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:id="@+id/joystickLeft"
+        android:layout_below="@+id/weapons"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
+
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
         android:id="@+id/weapons"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
         android:layout_row="0"
         android:layout_column="2"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/joystickLeft"
+        android:layout_toEndOf="@+id/joystickLeft"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp" />
 
     <ProgressBar
-        style="?android:attr/progressBarStyleSmall"
-        android:layout_width="204dp"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/healthAndEnerge"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/health"
+        android:max="1000"
         android:layout_row="2"
-        android:layout_column="2" />
+        android:layout_column="2"
+        android:layout_toRightOf="@+id/weapons"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/joystickRight"
+        android:layout_toStartOf="@+id/joystickRight"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="3dp"
+        android:indeterminate="false" />
+
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/energe"
+        android:layout_below="@+id/health"
+        android:layout_toRightOf="@+id/weapons"
+        android:layout_toEndOf="@+id/weapons"
+        android:layout_alignRight="@+id/health"
+        android:max="200"
+        android:indeterminate="false" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/weaponAmmo"
+        android:layout_below="@+id/weapons"
+        android:layout_alignLeft="@+id/weapons"
+        android:layout_alignStart="@+id/weapons"
+        android:layout_alignRight="@+id/weapons"
+        android:layout_alignEnd="@+id/weapons"
+        android:autoText="false"
+        android:textColor="#ff0bff48" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:id="@+id/gameScore"
+        android:layout_below="@+id/energe"
+        android:layout_toRightOf="@+id/weapons"
+        android:layout_alignRight="@+id/energe"
+        android:layout_alignEnd="@+id/energe"
+        android:textColor="#ff0bff48" />
 
 </RelativeLayout>
