@@ -3,6 +3,7 @@ package com.example.krabiysok.my_first_android_game;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -29,15 +30,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-            setContentView(R.layout.main_layout);
-        }
-        else {
-            this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-            this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                    WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            setContentView(R.layout.main_layout);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.main_layout);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             gameScreen = new GameScreen((SurfaceView) findViewById(R.id.gameScreen), this);
             joystick = new Joystick((SurfaceView) findViewById(R.id.joystick),
                     (SurfaceView) findViewById(R.id.gameScreen));
@@ -51,12 +50,11 @@ public class MainActivity extends Activity {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             Log.d("LogApp", "active");
-            if (gameProcess != null)
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
                 gameProcess.startGame();
         } else {
             Log.d("LogApp", "disabled");
-            if (gameProcess != null)
-                gameProcess.sleepGame();
+            gameProcess.sleepGame();
         }
     }
 

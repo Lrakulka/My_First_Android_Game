@@ -137,8 +137,15 @@ public class Joystick  {
         public synchronized Integer stickInField() {
             if (xDotStick == null || yDotStick == null)
                 return null;
-            float pos = (x - xDotStick) * (x - xDotStick) + (y - yDotStick) *
-                    (y - yDotStick);
+            // Exception NullPointer ? Bad synchronization?
+            float pos;
+            try {
+                pos = (x - xDotStick) * (x - xDotStick) + (y - yDotStick) *
+                        (y - yDotStick);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return 0;
+            }
             if (pos < rBigD)
                 return 0;
             if (pos < jumpRD)
