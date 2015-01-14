@@ -3,6 +3,7 @@ package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprite
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
+import android.util.Log;
 
 import com.example.krabiysok.my_first_android_game.GameScreen;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.GeneralAnimation;
@@ -85,8 +86,12 @@ public class Bullet extends GeneralAnimation {
 
         matrix.setTranslate(dst.centerX(), dst.centerY());
         matrix.preRotate((float) (moveAngle * 57.296));
-        bulletSprite = Bitmap.createBitmap(sprite, 0, bmpRezolution.y * (rows - 1),
+        // problem with height and weight == 0
+        if (bmpRezolution.x != 0 && bmpRezolution.y != 0)
+            bulletSprite = Bitmap.createBitmap(sprite, 0, bmpRezolution.y * (rows - 1),
                 bmpRezolution.x, bmpRezolution.y, matrix, true);
+        else bulletSprite = Bitmap.createBitmap(sprite, 0, bmpRezolution.y * (rows - 1),
+                1, 1, matrix, true);
         canva.drawBitmap(bulletSprite, src, dst, null);
         return resultOfAnimMove;
     }

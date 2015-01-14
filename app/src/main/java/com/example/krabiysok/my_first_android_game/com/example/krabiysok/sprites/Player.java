@@ -29,6 +29,7 @@ public class Player extends GeneralAnimation {
     private Weapon weapon;
     private Bullet bullet;
     private Double playerAngle;
+    private Integer ifFire;
     private int moveSpeed, playerX0, playerX1, playerY0, playerY1,
             bulletX0, bulletX1, bulletY0, bulletY1;
     private Message msg;
@@ -78,14 +79,15 @@ public class Player extends GeneralAnimation {
             weapon.reloud();
         }
         playerBullets.clear();
-        if (joystick.getAimPosition() != null &&
+        ifFire = joystick.isAimFire();
+        if (ifFire != null && ifFire == 1 &&
                 weapon.getReloudTime() == weapon.getBulletReloud()) {
             weapon.startReloud();
             msg = MainActivity.getHandler().
                     obtainMessage(MainActivity.AMMO_CHANGED, weapon.getAmmo(), weapon.getAmmo());
             MainActivity.getHandler().sendMessage(msg);
             playerBullets.add(weapon.getBullet(getPosition().x, getPosition().y,
-                    this, joystick.getAimAngle(getPosition())));
+                    this, joystick.getAimAngle()));
         }
         return playerBullets;
     }

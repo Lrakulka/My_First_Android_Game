@@ -1,9 +1,12 @@
 package com.example.krabiysok.my_first_android_game;
 
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.Player;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.MrCat;
@@ -29,6 +32,16 @@ public class GameProcess implements Runnable {
     private boolean stop, sleepGame;
     private Thread gameThread;
     private Paint paint;
+    private int currentFPS;
+    private Player player;
+    private MyArrayList<Bullet> bullets;
+    private Bullet bullet;
+    private ArrayList<Enemie> enemies;
+    private Enemie enimie;
+    private MyArrayList<Present> presents;
+    private Present present;
+    private MrCat mrCat;
+    private Random random;
 
     private GameProcess() {
         paint = new Paint();
@@ -55,17 +68,15 @@ public class GameProcess implements Runnable {
     @Override
     public void run() {
         Canvas canva;
-        int currentFPS = fps;
-        Player player = new Player(gameScreen.getWindowSize().x / 2,
+        currentFPS = fps;
+        player = new Player(gameScreen.getWindowSize().x / 2,
                 gameScreen.getWindowSize().y / 2, joystick);
-        MyArrayList<Bullet> bullets = new MyArrayList<>();
-        Bullet bullet;
-        ArrayList<Enemie> enemies = new ArrayList<>();
-        Enemie enimie;
-        MyArrayList<Present> presents = new MyArrayList<>();
-        Present present;
-        MrCat mrCat = new MrCat();
-        Random random = new Random();
+        joystick.setPlayer(player);
+        bullets = new MyArrayList<>();
+        enemies = new ArrayList<>();
+        presents = new MyArrayList<>();
+        mrCat = new MrCat();
+        random = new Random();
         int randomAbsInt, x, y;
         while (!stop) {
             Log.d("LogApp", "game Go");
@@ -111,12 +122,6 @@ public class GameProcess implements Runnable {
                 }
                 else present.draw(canva);
             }
-            if (!player.isAlive(bullets)) {
-                canva.drawText("Game Over", (float) (GameScreen.getWindowSize().x / 2 -
-                        GameScreen.getWindowSize().x / 5),
-                        GameScreen.getWindowSize().y / 2, paint);
-                stopGame(); //---
-            }
             for(int i = 0; i < bullets.size(); ++i) {
                 bullet = bullets.get(i);
                 if (!bullet.drawMove(canva)) {
@@ -124,7 +129,14 @@ public class GameProcess implements Runnable {
                     i--;
                 }
             }
-            gameScreen.draw(canva);
+            if (!player.isAlive(bullets)) {
+                canva.drawText("Game Over", (float) (GameScreen.getWindowSize().x / 2 -
+                                GameScreen.getWindowSize().x / 5),
+                        GameScreen.getWindowSize().y / 2, paint);
+                sleepGame(); //---
+                gameScreen.draw(canva);
+                MainActivity.getHandler().sendEmptyMessage(MainActivity.SET_BUTTONS_VISIBLE);
+            } else gameScreen.draw(canva);
             try {
                 if (currentFPS < 20)
                     Thread.sleep(30); // I did so specifically
@@ -157,5 +169,18 @@ public class GameProcess implements Runnable {
 
     public void stopGame() {
         stop = true;
+    }
+
+    public void restart() {
+        currentFPS = fps;
+        player = new Player(gameScreen.getWindowSize().x / 2,
+                gameScreen.getWindowSize().y / 2, joystick);
+        joystick.setPlayer(player);
+        bullets = new MyArrayList<>();
+        enemies = new ArrayList<>();
+        presents = new MyArrayList<>();
+        mrCat = new MrCat();
+        random = new Random();
+        this.startGame();
     }
 }

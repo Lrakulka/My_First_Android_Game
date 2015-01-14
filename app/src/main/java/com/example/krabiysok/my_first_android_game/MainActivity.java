@@ -7,15 +7,17 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
     public static final int HEALTH_CHANGED = 0, WEAPON_CHANGED = 1, AMMO_CHANGED = 2,
-            SCORE_CHANGED = 3;
+            SCORE_CHANGED = 3, SET_BUTTONS_VISIBLE = 4;
     private GameScreen gameScreen;
     private Joystick joystick;
     private GameProcess gameProcess;
@@ -34,7 +36,8 @@ public class MainActivity extends Activity {
             setContentView(R.layout.main_layout);
             gameScreen = new GameScreen((SurfaceView) findViewById(R.id.gameScreen), this);
             joystick = new Joystick((SurfaceView) findViewById(R.id.joystickRight),
-                    (SurfaceView) findViewById(R.id.gameScreen));
+                    (SurfaceView) findViewById(R.id.joystickLeft),
+                    (SurfaceView) findViewById(R.id.aimField));
             gameProcess = GameProcess.getGameProcess(gameScreen, joystick);
             context = this;
             handler = new Handler() {
@@ -62,6 +65,12 @@ public class MainActivity extends Activity {
                             ((TextView) MainActivity.getContext().findViewById(R.id.gameScore)).
                                     setText("Score " + String.valueOf(msg.arg1));
                             break;
+                        case SET_BUTTONS_VISIBLE:
+                            ((Button) (MainActivity.getContext().
+                                    findViewById(R.id.buttonClose))).setVisibility(View.VISIBLE);
+                            ((Button) (MainActivity.getContext().
+                                    findViewById(R.id.buttonRestart))).setVisibility(View.VISIBLE);
+                        break;
                     }
                 };
             };
@@ -96,5 +105,17 @@ public class MainActivity extends Activity {
 
     public static Handler getHandler() {
         return handler;
+    }
+
+    public void onCloseGame(View v) {
+        finish();
+    }
+
+    public void onRestartGame(View v) {
+        GameProcess.getGameProcess().restart();
+        ((Button) (MainActivity.getContext().
+                findViewById(R.id.buttonClose))).setVisibility(View.GONE);
+        ((Button) (MainActivity.getContext().
+                findViewById(R.id.buttonRestart))).setVisibility(View.GONE);
     }
 }

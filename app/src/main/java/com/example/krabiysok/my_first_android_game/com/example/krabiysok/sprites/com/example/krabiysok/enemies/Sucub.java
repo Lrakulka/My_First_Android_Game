@@ -23,7 +23,7 @@ public class Sucub extends Enemie {
     public Sucub(int x, int y) {
         super(x, y,
                 BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
-                        R.drawable.sucub), 300, (int) (600 / GameProcess.fps),
+                        R.drawable.sucub), 200, (int) (1000 / GameProcess.fps),
                 5000 / GameProcess.fps, 3);
     }
     
