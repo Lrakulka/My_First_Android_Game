@@ -50,9 +50,19 @@ public class GameProcess implements Runnable {
     }
 
     public static GameProcess getGameProcess() {
-        if (sGameProcess.mGameScreen != null)
-            return sGameProcess;
+        if (sGameProcess.mGameScreen != null) return sGameProcess;
         return null;
+    }
+
+    public static GameProcess getNewGameProcess(GameScreen gameScreen, Joystick joystick) {
+        // I did so because my program crashes when a user try to run close program
+        if (gameScreen != null && joystick != null) {
+            sGameProcess.mGameScreen = gameScreen;
+            sGameProcess.mJoystick = joystick;
+            sGameProcess.mGameThread = new Thread(sGameProcess, "Game Thread");
+            sGameProcess.mGameThread.setDaemon(true);
+        }
+        return sGameProcess;
     }
 
     public static GameProcess getGameProcess(GameScreen gameScreen, Joystick joystick) {
@@ -213,4 +223,6 @@ public class GameProcess implements Runnable {
     public boolean isGameSleep() {
         return mSleepGame;
     }
+
+    public boolean isGameStop() { return mStop; }
 }

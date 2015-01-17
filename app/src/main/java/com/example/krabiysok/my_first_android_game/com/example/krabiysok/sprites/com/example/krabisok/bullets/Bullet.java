@@ -76,14 +76,12 @@ public class Bullet extends GeneralAnimation {
 
         mMatrix.setTranslate(mDst.centerX(), mDst.centerY());
         mMatrix.preRotate(mMoveAngle * ANGLES_IN_RADIAN);
-        // width and height must be > 0. Need to fix
+        // width and height must be > 0. Need to fix. Problem in mMatrix.
         try {
             mBulletSprite = Bitmap.createBitmap(mSprite, 0, mBmpRezolution.y * (mRows - 1),
                     mBmpRezolution.x, mBmpRezolution.y, mMatrix, true);
         } catch (Exception e) {
             e.printStackTrace();
-            mBulletSprite = Bitmap.createBitmap(mSprite, 0, mBmpRezolution.y * (mRows - 1),
-                    1, 1, mMatrix, true);
         }
         canva.drawBitmap(mBulletSprite, mSrc, mDst, null);
         return mResultOfAnimMove;

@@ -44,7 +44,7 @@ public class MainActivity extends Activity {
                     (SurfaceView) findViewById(R.id.aimField));
             mRightStick = (SurfaceView) findViewById(R.id.joystickRight);
             mLeftStick = (SurfaceView) findViewById(R.id.joystickLeft);
-            mGameProcess = GameProcess.getGameProcess(mGameScreen, mJoystick);
+
             mMainActivity = this;
             mHandler = new Handler() {
                 public void handleMessage(android.os.Message msg) {
@@ -93,7 +93,10 @@ public class MainActivity extends Activity {
         super.onWindowFocusChanged(hasFocus);
         if (hasFocus) {
             Log.d("LogApp", "active");
-            if (mGameProcess != null && mGameProcess.isGameSleep() && ((Button)
+            if (mGameProcess != null && mGameProcess.isGameStop()) {
+                mGameProcess = GameProcess.getNewGameProcess(mGameScreen, mJoystick);
+            } else mGameProcess = GameProcess.getGameProcess(mGameScreen, mJoystick);
+            if (mGameProcess.isGameSleep() && ((Button)
                     (MainActivity.getMainActivity().findViewById(R.id.buttonRestart))).
                     getVisibility() != View.VISIBLE) {
                 //mGameProcess.drawLastFrame();
@@ -114,8 +117,9 @@ public class MainActivity extends Activity {
     public void onDestroy() {
         super.onDestroy();
         Log.d("LogApp", "Destroy");
-        if (mGameProcess != null)
+        if (mGameProcess != null) {
             mGameProcess.stopGame();
+        }
     }
 
     public static MainActivity getMainActivity() {
@@ -127,6 +131,9 @@ public class MainActivity extends Activity {
     }
 
     public void onCloseGame(View v) {
+        if (mGameProcess != null) {
+            mGameProcess.stopGame();
+        }
         finish();
     }
 
@@ -161,6 +168,9 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getTitle().equals(getResources().getString(R.string.close_game))) {
+            if (mGameProcess != null) {
+                mGameProcess.stopGame();
+            }
             finish();
         }
         if (item.getTitle().equals(getResources().getString(R.string.restart_game))) {
