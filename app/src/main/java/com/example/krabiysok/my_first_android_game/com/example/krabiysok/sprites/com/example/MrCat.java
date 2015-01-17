@@ -1,11 +1,9 @@
 package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
 import com.example.krabiysok.my_first_android_game.GameProcess;
-import com.example.krabiysok.my_first_android_game.GameScreen;
 import com.example.krabiysok.my_first_android_game.MainActivity;
 import com.example.krabiysok.my_first_android_game.R;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.GeneralAnimation;
@@ -13,65 +11,62 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.com.example.krabiysok.presents.HealthPresent;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.com.example.krabiysok.presents.Present;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.com.example.krabiysok.presents.WeaponPresent;
-import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
-
-import java.util.ArrayList;
 
 /**
  * Created by KrabiySok on 1/13/2015.
  */
 public class MrCat extends GeneralAnimation {
-    private static final int SPEED = 800 / GameProcess.fps,
+    private static final int SPEED = 800 / GameProcess.FPS,
             ACCELER_TIME = 0, ACCELERATION = 0;
-    private static final double angle15 = angle45 / 3, angle150 = Math.PI -
-            angle45 * 2, angle75 = angle45 * 3, angle195 = Math.PI + angle15,
-            angle105 = PI90 + angle15, angle255 = PI270 - angle15;
-    private double moveAngle;
-    private boolean active;
-    private int presentCount;
+    private static final float ANGLE15 = ANGLE45 / 3, ANGLE150 = FLOAT_PI -
+            ANGLE45 * 2, ANGLE75 = ANGLE45 * 3, ANGLE195 = FLOAT_PI + ANGLE15,
+            ANGLE105 = PI90 + ANGLE15, ANGLE285 = PI360 - ANGLE75;
+    private float mMoveAngle;
+    private boolean mActive;
+    private int mPresentCount;
 
     public MrCat() {
-        super(0, 0, 4, 3, BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
-                R.drawable.mr_cat), 0.12);
-        moveAngle = PI270;
+        super(0, 0, 4, 3, BitmapFactory.decodeResource(MainActivity.getMainActivity().getResources(),
+                R.drawable.mr_cat), 0.12f);
+        mMoveAngle = PI270;
     }
 
     public Present action(Canvas canva, int randKey) {
-        if (active) {
-            if (position.x <= minXAnimatPos) {
-                moveAngle = angle15 + ((angle150 * 1000) % randKey) / 1000;
-                active = false;
+        if (mActive) {
+            if (mPosition.x <= mMinXAnimatPos) {
+                mMoveAngle = ANGLE15 + ((ANGLE150 * 1000) % randKey) / 1000;
+                mActive = false;
             }
-            if (position.x >= maxXAnimatPos) {
-                moveAngle = angle195 + ((angle150 * 1000) % randKey) / 1000;
-                active = false;
+            if (mPosition.x >= mMaxXAnimatPos) {
+                mMoveAngle = ANGLE195 + ((ANGLE150 * 1000) % randKey) / 1000;
+                mActive = false;
             }
-            if (position.y >= maxYAnimatPos) {
-                moveAngle = (randKey % 2) == 0 ? angle255 +
-                        ((angle75 * 1000) % randKey) / 1000 :
-                        ((angle105 * 1000) % randKey) / 1000;
-                active = false;
+            if (mPosition.y >= mMaxYAnimatPos) {
+                mMoveAngle = (randKey % 2) == 1 ? ANGLE285 +
+                        ((ANGLE75 * 1000) % randKey) / 1000 :
+                        ((ANGLE75 * 1000) % randKey) / 1000;
+                mActive = false;
             }
-            if (position.y <= minYAnimatPos) {
-                moveAngle = angle105 + ((angle150 * 1000) % randKey) / 1000;
-                active = false;
+            if (mPosition.y <= mMinYAnimatPos) {
+                mMoveAngle = ANGLE105 + ((ANGLE150 * 1000) % randKey) / 1000;
+                mActive = false;
             }
         }
-        if (!active && (randKey % 50 < 2)) {
-            active = true;
-            presentCount = 0;
+        if (!mActive && (randKey % 50 < 2)) {
+            mActive = true;
+            mPresentCount = 0;
         }
-        if (active) {
-            drawMove(canva, moveAngle, SPEED);
-            if (presentCount < 5 &&(randKey % 100) < 3) {
-                presentCount++;
+        if (mActive) {
+            drawMove(canva, mMoveAngle, SPEED);
+            if (mPresentCount < 5 && (randKey % 100) < 3) {
+                mPresentCount++;
                 switch (randKey % 3) {
                     case 0:
-                        return new HealthPresent(position.x, position.y);
+                        return new HealthPresent(mPosition.x, mPosition.y);
                     case 1:
-                        return new WeaponPresent(position.x, position.y);
+                        return new WeaponPresent(mPosition.x, mPosition.y);
                     case 2:
-                        return new AccelerationPresent(position.x, position.y);
+                        return new AccelerationPresent(mPosition.x, mPosition.y);
                 }
             }
         }

@@ -1,9 +1,6 @@
 package com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapons;
 
-import android.graphics.BitmapFactory;
-
 import com.example.krabiysok.my_first_android_game.GameProcess;
-import com.example.krabiysok.my_first_android_game.MainActivity;
 import com.example.krabiysok.my_first_android_game.R;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.GeneralAnimation;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
@@ -15,11 +12,11 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
 public class RegularWeapon extends Weapon {
 
     public RegularWeapon() {
-        super(500 / GameProcess.fps, 999, R.drawable.regular_weapon);
+        super(500 / GameProcess.FPS, 999, R.drawable.regular_weapon);
     }
 
     @Override
-    public Bullet getBullet(int x, int y, GeneralAnimation bulletBelongs, double angle) {
+    public Bullet getBullet(int x, int y, GeneralAnimation bulletBelongs, float angle) {
         return new RegularBullet(x, y, bulletBelongs, angle);
     }
 }

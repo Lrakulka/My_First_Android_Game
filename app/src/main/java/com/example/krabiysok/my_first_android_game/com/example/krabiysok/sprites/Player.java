@@ -3,8 +3,6 @@ package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprite
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Message;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.krabiysok.my_first_android_game.GameProcess;
 import com.example.krabiysok.my_first_android_game.Joystick;
@@ -20,151 +18,147 @@ import java.util.ArrayList;
  * Created by KrabiySok on 1/10/2015.
  */
 public class Player extends GeneralAnimation {
-    private static final int HEALTH = 1000, SPEED = 1000 / GameProcess.fps,
-            ACCELER_TIME = 10000 / GameProcess.fps, ACCELERATION = 2;
-    private Joystick joystick;
-    private int health = HEALTH, accelerTime = ACCELER_TIME, score;
-    private ArrayList<Weapon> weapons;
-    private ArrayList<Bullet> playerBullets;
-    private Weapon weapon;
-    private Bullet bullet;
-    private Double playerAngle;
-    private Integer ifFire;
-    private int moveSpeed, playerX0, playerX1, playerY0, playerY1,
-            bulletX0, bulletX1, bulletY0, bulletY1;
-    private Message msg;
+    private static final int HEALTH = 1000, SPEED = 500 / GameProcess.FPS,
+            ACCELER_TIME = 10000 / GameProcess.FPS, ACCELERATION = 2;
+    private Joystick mJoystick;
+    private int mHealth = HEALTH, mAccelerTime = ACCELER_TIME, mScore;
+    private ArrayList<Weapon> mWeapons;
+    private ArrayList<Bullet> mPlayerBullets;
+    private Weapon mWeapon;
+    private Bullet mBullet;
+    private Float mPlayerAngle;
+    private Integer mIsPlayerFire;
+    private int mMoveSpeed, mPlayerX0, mPlayerX1, mPlayerY0, mPlayerY1,
+            mBulletX0, mBulletX1, mBulletY0, mBulletY1;
+    private Message mMsg;
 
     public Player(int x, int y, Joystick joystick) {
         super(x, y, 4, 3,
-                BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
+                BitmapFactory.decodeResource(MainActivity.getMainActivity().getResources(),
                 R.drawable.boy), 0.12);
-        playerBullets  = new ArrayList<>();
-        this.joystick = joystick;
-        weapons = new ArrayList<>();
-        weapons.add(new RegularWeapon());
-        weapon = weapons.get(0);
-        msg = MainActivity.getHandler().
-                obtainMessage(MainActivity.SCORE_CHANGED, score, 0);
-        MainActivity.getHandler().sendMessage(msg);
-        msg = MainActivity.getHandler().
-                obtainMessage(MainActivity.WEAPON_CHANGED, weapon.getWeapon(), weapon.getAmmo());
-        MainActivity.getHandler().sendMessage(msg);
+        mPlayerBullets = new ArrayList<>();
+        mJoystick = joystick;
+        mWeapons = new ArrayList<>();
+        mWeapons.add(new RegularWeapon());
+        mWeapon = mWeapons.get(0);
+        mMsg = MainActivity.getHandler().
+                obtainMessage(MainActivity.SCORE_CHANGED, mScore, 0);
+        MainActivity.getHandler().sendMessage(mMsg);
+        mMsg = MainActivity.getHandler().
+                obtainMessage(MainActivity.WEAPON_CHANGED, mWeapon.getWeapon(), mWeapon.getAmmo());
+        MainActivity.getHandler().sendMessage(mMsg);
     }
 
-    public ArrayList<Bullet> action(Canvas canva) {
-        playerAngle = joystick.getDirectionStick();
-        moveSpeed = SPEED;
-        if (playerAngle != null) {
-            if (accelerTime > 0 && joystick.stickInField() == 1) {
-                moveSpeed *= ACCELERATION;
-                accelerTime--;
+    public ArrayList<Bullet> action(Canvas canvas) {
+        mPlayerAngle = mJoystick.getDirectionStick();
+        mMoveSpeed = SPEED;
+        if (mPlayerAngle != null) {
+            if (mAccelerTime > 0 && mJoystick.stickInField() == 1) {
+                mMoveSpeed *= ACCELERATION;
+                mAccelerTime--;
             }
         }
-        drawMove(canva, playerAngle, moveSpeed);
-        for (int i = weapons.size() - 1; ; i--) {
-            if (weapons.get(i).getAmmo() <= 0 && i != 0) {
-                weapons.remove(i);
+        drawMove(canvas, mPlayerAngle, mMoveSpeed);
+        for (int i = mWeapons.size() - 1; ; i--) {
+            if (mWeapons.get(i).getAmmo() <= 0 && i != 0) {
+                mWeapons.remove(i);
             } else {
-                if (weapon == null || !weapon.equals(weapons.get(i))) {
-                    weapon = weapons.get(i);
-                    msg = MainActivity.getHandler().
-                         obtainMessage(MainActivity.WEAPON_CHANGED, weapon.getWeapon(),
-                                 weapon.getAmmo());
-                    MainActivity.getHandler().sendMessage(msg);
+                if (mWeapon == null || !mWeapon.equals(mWeapons.get(i))) {
+                    mWeapon = mWeapons.get(i);
+                    mMsg = MainActivity.getHandler().
+                         obtainMessage(MainActivity.WEAPON_CHANGED, mWeapon.getWeapon(),
+                                 mWeapon.getAmmo());
+                    MainActivity.getHandler().sendMessage(mMsg);
                 }
                 break;
             }
         }
-        if (weapon.getReloudTime() < weapon.getBulletReloud()) {
-            weapon.reloud();
+        if (mWeapon.getReloadTime() < mWeapon.getBulletReload()) {
+            mWeapon.reload();
         }
-        playerBullets.clear();
-        ifFire = joystick.isAimFire();
-        if (ifFire != null && ifFire == 1 &&
-                weapon.getReloudTime() == weapon.getBulletReloud()) {
-            weapon.startReloud();
-            msg = MainActivity.getHandler().
-                    obtainMessage(MainActivity.AMMO_CHANGED, weapon.getAmmo(), weapon.getAmmo());
-            MainActivity.getHandler().sendMessage(msg);
-            playerBullets.add(weapon.getBullet(getPosition().x, getPosition().y,
-                    this, joystick.getAimAngle()));
+        mPlayerBullets.clear();
+        mIsPlayerFire = mJoystick.isAimFire();
+        if (mIsPlayerFire != null && mIsPlayerFire == 1 &&
+                mWeapon.getReloadTime() == mWeapon.getBulletReload()) {
+            mWeapon.startReload();
+            mMsg = MainActivity.getHandler().
+                    obtainMessage(MainActivity.AMMO_CHANGED, mWeapon.getAmmo(), mWeapon.getAmmo());
+            MainActivity.getHandler().sendMessage(mMsg);
+            mPlayerBullets.add(mWeapon.getBullet(getPosition().x, getPosition().y,
+                    this, mJoystick.getAimAngle()));
         }
-        return playerBullets;
+        return mPlayerBullets;
     }
 
     public boolean isAlive(ArrayList<Bullet> bullets) {
         for(int i = 0; i < bullets.size(); i++) {
-            bullet = bullets.get(i);
-            if (!bullet.getBulletBelongs().equals(this)) {
-                playerX0 = getPosition().x;
-                playerY0 = getPosition().y;
-                bulletX0 = bullet.getPosition().x;
-                bulletY0 = bullet.getPosition().y;
-                playerX1 = playerX0 + getSpriteResolution().x;
-                playerY1 = playerY0 + getSpriteResolution().y;
-                bulletX1 = bulletX0 + bullet.getSpriteResolution().x;
-                bulletY1 = bulletY0 + bullet.getSpriteResolution().y;
-                if ((bulletX0 <= playerX0 && playerX0 <= bulletX1 &&
-                        bulletY0 <= playerY0 && playerY0 <= bulletY1) ||
-                        (bulletX0 <= playerX1 && playerX1 <= bulletX1 &&
-                                bulletY0 <= playerY1 && playerY1 <= bulletY1)) {
-                    health -= bullet.getDamage();
+            mBullet = bullets.get(i);
+            if (!mBullet.getBulletBelongs().equals(this)) {
+                mPlayerX0 = getPosition().x;
+                mPlayerY0 = getPosition().y;
+                mBulletX0 = mBullet.getPosition().x;
+                mBulletY0 = mBullet.getPosition().y;
+                mPlayerX1 = mPlayerX0 + getSpriteResolution().x;
+                mPlayerY1 = mPlayerY0 + getSpriteResolution().y;
+                mBulletX1 = mBulletX0 + mBullet.getSpriteResolution().x;
+                mBulletY1 = mBulletY0 + mBullet.getSpriteResolution().y;
+                if ((mBulletX0 <= mPlayerX0 && mPlayerX0 <= mBulletX1 &&
+                        mBulletY0 <= mPlayerY0 && mPlayerY0 <= mBulletY1) ||
+                        (mBulletX0 <= mPlayerX1 && mPlayerX1 <= mBulletX1 &&
+                                mBulletY0 <= mPlayerY1 && mPlayerY1 <= mBulletY1)) {
+                    mHealth -= mBullet.getDamage();
                     bullets.remove(i);
                     i--;
                 }
             }
         }
-        if (health <= 0)
+        if (mHealth <= 0)
             return false;
-        msg = MainActivity.getHandler().
-                obtainMessage(MainActivity.HEALTH_CHANGED, health, accelerTime);
-        MainActivity.getHandler().sendMessage(msg);
+        mMsg = MainActivity.getHandler().
+                obtainMessage(MainActivity.HEALTH_CHANGED, mHealth, mAccelerTime);
+        MainActivity.getHandler().sendMessage(mMsg);
         return true;
     }
 
     public void addWeapon(Weapon weapon) {
-        weapons.add(weapon);
+        mWeapons.add(weapon);
     }
 
     public Weapon getWeapon() {
-        return weapon;
+        return mWeapon;
     }
 
     public int getScore100() {
-        int score100 = score / 100;
+        int score100 = mScore / 100;
         return score100;
     }
 
     public int getScore() {
-        return score;
+        return mScore;
     }
 
     public void takeHealth(int take) {
-        health -= take;
+        mHealth -= take;
     }
 
-    public boolean addHealth(int health) {
-        this.health += health;
-        if (this.health >= HEALTH) {
-            this.health = HEALTH;
-            return false;
+    public void addHealth(int health) {
+        this.mHealth += health;
+        if (this.mHealth >= HEALTH) {
+            this.mHealth = HEALTH;
         }
-        return true;
     }
 
-    public boolean addAccelerationTime(int accelerationTime) {
-        this.accelerTime += accelerationTime;
-        if (this.accelerTime >= ACCELER_TIME) {
-            this.accelerTime = ACCELER_TIME;
-            return false;
+    public void addAccelerationTime(int accelerationTime) {
+        this.mAccelerTime += accelerationTime;
+        if (this.mAccelerTime >= ACCELER_TIME) {
+            this.mAccelerTime = ACCELER_TIME;
         }
-        return true;
     }
 
     public void addScore(int points) {
-        score += points;
-        msg = MainActivity.getHandler().
-                obtainMessage(MainActivity.SCORE_CHANGED, score, 0);
-        MainActivity.getHandler().sendMessage(msg);
+        mScore += points;
+        mMsg = MainActivity.getHandler().
+                obtainMessage(MainActivity.SCORE_CHANGED, mScore, 0);
+        MainActivity.getHandler().sendMessage(mMsg);
     }
 }

@@ -1,6 +1,5 @@
 package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 
@@ -29,15 +28,13 @@ public class Sucub extends Enemie {
     
     @Override
     public ArrayList<Bullet> action(Canvas canva, Player player) {
-        enemieAngle = Joystick.getAngleBetween(getPosition(), player.getPosition());
-        moveSpeed = speed;
-        if (enemieAngle != null) {
-            if (accelerTime > 0) {
-                moveSpeed *= acceleration;
-                accelerTime--;
-            }
+        mEnemieAngle = Joystick.getAngleBetween(getPosition(), player.getPosition());
+        mMoveSpeed = mSpeed;
+        if (mEnemieAngle != null && mAccelerTime > 0) {
+            mMoveSpeed *= mAcceleration;
+            mAccelerTime--;
         }
-        drawMove(canva, enemieAngle, moveSpeed);
+        drawMove(canva, mEnemieAngle, mMoveSpeed);
         sucubX0 = getPosition().x;
         sucubY0 = getPosition().y;
         playerX0 = player.getPosition().x;
@@ -51,6 +48,6 @@ public class Sucub extends Enemie {
                 (playerX0 <= sucubX1 && sucubX1 <= playerX1 &&
                         playerY0 <= sucubY1 && sucubY1 <= playerY1))
             player.takeHealth(DAMAGE);
-        return enemieBullets;
+        return mEnemieBullets;
     }
 }

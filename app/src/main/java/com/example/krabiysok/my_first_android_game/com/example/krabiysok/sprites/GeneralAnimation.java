@@ -12,153 +12,153 @@ import com.example.krabiysok.my_first_android_game.GameScreen;
  * Created by KrabiySok on 12/30/2014.
  */
 public class GeneralAnimation {
-    public static final double angle45 = Math.PI / 4, angle135 = Math.PI - angle45,
-            angle225 = Math.PI + angle45, angle315 = Math.PI + 2 * angle45,
-            PI360 = Math.PI * 2, PI90 = Math.PI / 2, PI270 = PI90 + Math.PI;
-    protected int rows, columns, newXPosition, newYPosition, maxXAnimatPos, maxYAnimatPos,
-            minXAnimatPos, minYAnimatPos;
-    protected Bitmap sprite, bulletSprite;
-    protected Rect src, dst;
-    protected Point bmpRezolution, spriteResolution, position, spriteNormalResolution;
-    private double angle;
-    private byte forward, back, left, right;
-    protected boolean resultOfAnimMove;
-    protected Matrix matrix;
+    public static final float FLOAT_PI = (float) Math.PI, FLOAT_PI2 = FLOAT_PI * 2,
+            ANGLE45 = FLOAT_PI / 4, ANGLE135 = FLOAT_PI - ANGLE45,
+            ANGLE225 = FLOAT_PI + ANGLE45, ANGLE315 = FLOAT_PI + 2 * ANGLE45,
+            PI360 = FLOAT_PI * 2, PI90 = FLOAT_PI / 2, PI270 = PI90 + FLOAT_PI;
+    protected int mRows, mColumns, mNewXPosition, mNewYPosition, mMaxXAnimatPos, mMaxYAnimatPos,
+            mMinXAnimatPos, mMinYAnimatPos;
+    protected Bitmap mSprite, mBulletSprite;
+    protected Rect mSrc, mDst;
+    protected Point mBmpRezolution, mSpriteResolution, mPosition, mSpriteNormalResolution;
+    private float mAngle;
+    private byte mForward, mBack, mLeft, mRight;
+    protected boolean mResultOfAnimMove;
+    protected Matrix mMatrix;
 
     protected GeneralAnimation(int x, int y, int rows, int columns, Bitmap sprite,
                                double spriteRatioHieght) {
-        this.rows = rows;
-        this.columns = columns;
-        this.sprite = sprite;
-        bmpRezolution = new Point(sprite.getWidth() / columns,
+        mRows = rows;
+        mColumns = columns;
+        mSprite = sprite;
+        mBmpRezolution = new Point(sprite.getWidth() / columns,
                 sprite.getHeight() / rows);
-        position = new Point(x, y);
-        spriteNormalResolution = new Point();
+        mPosition = new Point(x, y);
+        mSpriteNormalResolution = new Point();
         // Gets resolution of sprite on game screen
-        this.spriteNormalResolution.y = (int) (GameScreen.getWindowSize().y * spriteRatioHieght);
-        this.spriteNormalResolution.x =  bmpRezolution.x *
-                this.spriteNormalResolution.y / bmpRezolution.y;
-        src = new Rect(0, 0, bmpRezolution.x, bmpRezolution.y);
-        dst = new Rect(position.x, position.y, position.x + this.spriteNormalResolution.x,
-                position.y + this.spriteNormalResolution.y);
-        matrix = new Matrix();
-        forward = back = left = right = 0;
-        maxXAnimatPos = GameScreen.getWindowSize().x - this.spriteNormalResolution.x;
-        maxYAnimatPos = GameScreen.GAME_SCREEN_HEIGHT_MAX - this.spriteNormalResolution.y;
-        minYAnimatPos = GameScreen.GAME_SCREEN_HEIGHT_MIN;
-        minXAnimatPos = 0;
-        this.spriteResolution = new Point(spriteNormalResolution);
+        mSpriteNormalResolution.y = (int) (GameScreen.getWindowSize().y * spriteRatioHieght);
+        mSpriteNormalResolution.x =  mBmpRezolution.x *
+                this.mSpriteNormalResolution.y / mBmpRezolution.y;
+        mSrc = new Rect(0, 0, mBmpRezolution.x, mBmpRezolution.y);
+        mDst = new Rect(mPosition.x, mPosition.y, mPosition.x + mSpriteNormalResolution.x,
+                mPosition.y + mSpriteNormalResolution.y);
+        mMatrix = new Matrix();
+        mForward = mBack = mLeft = mRight = 0;
+        mMaxXAnimatPos = GameScreen.getWindowSize().x - mSpriteNormalResolution.x;
+        mMaxYAnimatPos = GameScreen.sGameScreenHeightMax - mSpriteNormalResolution.y;
+        mMinYAnimatPos = GameScreen.sGameScreenHeightMin;
+        mMinXAnimatPos = 0;
+        mSpriteResolution = new Point(mSpriteNormalResolution);
     }
 
-    public boolean drawMove(Canvas canva, Double moveAngle, int distance) {
-        resultOfAnimMove = true;
+    public boolean drawMove(Canvas canvas, Float moveAngle, int distance) {
+        mResultOfAnimMove = true;
         if (moveAngle != null) {
-            if (moveAngle > Math.PI)
-                angle = PI360 - moveAngle;
-            else angle = moveAngle;
-            if (angle > PI90)
-                angle = Math.PI - angle;
-            newYPosition = (int) (distance * Math.cos(angle));
-            newXPosition = (int) (distance * Math.sin(angle));
+            if (moveAngle > FLOAT_PI) mAngle = PI360 - moveAngle;
+            else mAngle = moveAngle;
+            if (mAngle > PI90)
+                mAngle = FLOAT_PI - mAngle;
+            mNewYPosition = (int) (distance * Math.cos(mAngle));
+            mNewXPosition = (int) (distance * Math.sin(mAngle));
 
-            if (moveAngle > angle315 || moveAngle <= angle45) {
-                position.y -= newYPosition;
-                position.x += moveAngle > angle315 ? -newXPosition : newXPosition;
+            if (moveAngle > ANGLE315 || moveAngle <= ANGLE45) {
+                mPosition.y -= mNewYPosition;
+                mPosition.x += moveAngle > ANGLE315 ? -mNewXPosition : mNewXPosition;
                 moveBack();
             }
-            else if (moveAngle > angle45 && moveAngle <= angle135) {
-                    position.x += newXPosition;
-                    position.y += moveAngle > PI90 ? newYPosition : -newYPosition;
+            else if (moveAngle > ANGLE45 && moveAngle <= ANGLE135) {
+                    mPosition.x += mNewXPosition;
+                    mPosition.y += moveAngle > PI90 ? mNewYPosition : -mNewYPosition;
                     moveRight();
                 }
-                else if (moveAngle > angle135 && moveAngle <= angle225) {
-                        position.y += newYPosition;
-                        position.x += moveAngle > Math.PI ? -newXPosition : newXPosition;
+                else if (moveAngle > ANGLE135 && moveAngle <= ANGLE225) {
+                        mPosition.y += mNewYPosition;
+                        mPosition.x += moveAngle > FLOAT_PI ? -mNewXPosition : mNewXPosition;
                         moveForward();
                     }
-                    else if (moveAngle > angle225 && moveAngle <= angle315) {
-                        position.x -= newXPosition;
-                        position.y += moveAngle > PI270 ? -newYPosition : newYPosition;
+                    else if (moveAngle > ANGLE225 && moveAngle <= ANGLE315) {
+                        mPosition.x -= mNewXPosition;
+                        mPosition.y += moveAngle > PI270 ? -mNewYPosition : mNewYPosition;
                         moveLeft();
                     }
         } else {
-            forward = 0;
+            mForward = 0;
             moveForward();
         }
         // Protect from going beyond game screen
-        maxXAnimatPos = GameScreen.getWindowSize().x - this.spriteResolution.x;
-        if (position.x < minXAnimatPos) {
-            position.x = minXAnimatPos;
-            resultOfAnimMove = false;
+        mMaxXAnimatPos = GameScreen.getWindowSize().x - this.mSpriteResolution.x;
+        if (mPosition.x < mMinXAnimatPos) {
+            mPosition.x = mMinXAnimatPos;
+            mResultOfAnimMove = false;
         }
-        if (position.x > maxXAnimatPos) {
-            position.x = maxXAnimatPos;
-            resultOfAnimMove = false;
+        if (mPosition.x > mMaxXAnimatPos) {
+            mPosition.x = mMaxXAnimatPos;
+            mResultOfAnimMove = false;
         }
-        if (position.y > maxYAnimatPos) {
-            position.y = maxYAnimatPos;
-            resultOfAnimMove = false;
+        if (mPosition.y > mMaxYAnimatPos) {
+            mPosition.y = mMaxYAnimatPos;
+            mResultOfAnimMove = false;
         }
-        if (position.y < minYAnimatPos) {
-            position.y = minYAnimatPos;
-            resultOfAnimMove = false;
+        if (mPosition.y < mMinYAnimatPos) {
+            mPosition.y = mMinYAnimatPos;
+            mResultOfAnimMove = false;
         }
-        spriteResolution.x = (int) (spriteNormalResolution.x *
-                ((float) position.y / GameScreen.getWindowSize().y));
-        spriteResolution.y = (int) (spriteNormalResolution.y *
-                ((float)position.y / GameScreen.getWindowSize().y));
-        dst.set(position.x, position.y, position.x + spriteResolution.x,
-                position.y + spriteResolution.y);
-        canva.drawBitmap(sprite, src, this.dst, null);
-        return resultOfAnimMove;
+        mSpriteResolution.x = (int) (mSpriteNormalResolution.x *
+                mPosition.y / GameScreen.getWindowSize().y);
+        mSpriteResolution.y = (int) (mSpriteNormalResolution.y *
+                mPosition.y / GameScreen.getWindowSize().y);
+        mDst.set(mPosition.x, mPosition.y, mPosition.x + mSpriteResolution.x,
+                mPosition.y + mSpriteResolution.y);
+        canvas.drawBitmap(mSprite, mSrc, this.mDst, null);
+        return mResultOfAnimMove;
     }
 
    private void moveForward() {
-        back = left = right = 0;
-        if ( forward >= columns) {
-            forward = 0;
+        mBack = mLeft = mRight = 0;
+        if ( mForward >= mColumns) {
+            mForward = 0;
         }
-        src.set(forward * bmpRezolution.x, 0,
-                (forward + 1) * bmpRezolution.x, bmpRezolution.y);
-        forward++;
+        mSrc.set(mForward * mBmpRezolution.x, 0,
+                (mForward + 1) * mBmpRezolution.x, mBmpRezolution.y);
+        mForward++;
     }
 
     private void moveLeft() {
-        back = forward = right = 0;
-        if ( left >= columns) {
-            left = 0;
+        mBack = mForward = mRight = 0;
+        if ( mLeft >= mColumns) {
+            mLeft = 0;
         }
-        src.set(left * bmpRezolution.x, bmpRezolution.y,
-                (left + 1) * bmpRezolution.x, bmpRezolution.y * 2);
-        left++;
+        mSrc.set(mLeft * mBmpRezolution.x, mBmpRezolution.y,
+                (mLeft + 1) * mBmpRezolution.x, mBmpRezolution.y * 2);
+        mLeft++;
     }
 
     private void moveRight() {
-        back = forward = left = 0;
-        if ( right >= columns) {
-            right = 0;
+        mBack = mForward = mLeft = 0;
+        if ( mRight >= mColumns) {
+            mRight = 0;
         }
-        src.set(right * bmpRezolution.x, bmpRezolution.y * 2,
-                (right + 1) * bmpRezolution.x, bmpRezolution.y * 3);
-        right++;
+        mSrc.set(mRight * mBmpRezolution.x, mBmpRezolution.y * 2,
+                (mRight + 1) * mBmpRezolution.x, mBmpRezolution.y * 3);
+        mRight++;
     }
 
     private void moveBack() {
-        right = forward = left = 0;
-        if ( back >= columns) {
-            back = 0;
+        mRight = mForward = mLeft = 0;
+        if ( mBack >= mColumns) {
+            mBack = 0;
         }
-        src.set(back * bmpRezolution.x, bmpRezolution.y * 3,
-                (back + 1) * bmpRezolution.x, bmpRezolution.y * 4);
-        back++;
+        mSrc.set(mBack * mBmpRezolution.x, mBmpRezolution.y * 3,
+                (mBack + 1) * mBmpRezolution.x, mBmpRezolution.y * 4);
+        mBack++;
     }
 
     public Point getPosition() {
-        return new Point(position);
+        return new Point(mPosition);
     }
 
     public Point getSpriteResolution() {
-        return new Point(spriteResolution);
+        return new Point(mSpriteResolution);
     }
 
     @Override
@@ -168,24 +168,24 @@ public class GeneralAnimation {
 
         GeneralAnimation that = (GeneralAnimation) o;
 
-        if (Double.compare(that.angle, angle) != 0) return false;
-        if (back != that.back) return false;
-        if (columns != that.columns) return false;
-        if (forward != that.forward) return false;
-        if (left != that.left) return false;
-        if (resultOfAnimMove != that.resultOfAnimMove) return false;
-        if (right != that.right) return false;
-        if (rows != that.rows) return false;
-        if (!bmpRezolution.equals(that.bmpRezolution)) return false;
-        if (!bulletSprite.equals(that.bulletSprite)) return false;
-        if (!dst.equals(that.dst)) return false;
-        if (matrix != null ? !matrix.equals(that.matrix) : that.matrix != null) return false;
-        if (!sprite.equals(that.sprite)) return false;
-        if (spriteNormalResolution != null ? !spriteNormalResolution.equals(that.spriteNormalResolution) : that.spriteNormalResolution != null)
+        if (Double.compare(that.mAngle, mAngle) != 0) return false;
+        if (mBack != that.mBack) return false;
+        if (mColumns != that.mColumns) return false;
+        if (mForward != that.mForward) return false;
+        if (mLeft != that.mLeft) return false;
+        if (mResultOfAnimMove != that.mResultOfAnimMove) return false;
+        if (mRight != that.mRight) return false;
+        if (mRows != that.mRows) return false;
+        if (!mBmpRezolution.equals(that.mBmpRezolution)) return false;
+        if (!mBulletSprite.equals(that.mBulletSprite)) return false;
+        if (!mDst.equals(that.mDst)) return false;
+        if (mMatrix != null ? !mMatrix.equals(that.mMatrix) : that.mMatrix != null) return false;
+        if (!mSprite.equals(that.mSprite)) return false;
+        if (mSpriteNormalResolution != null ? !mSpriteNormalResolution.equals(that.mSpriteNormalResolution) : that.mSpriteNormalResolution != null)
             return false;
-        if (spriteResolution != null ? !spriteResolution.equals(that.spriteResolution) : that.spriteResolution != null)
+        if (mSpriteResolution != null ? !mSpriteResolution.equals(that.mSpriteResolution) : that.mSpriteResolution != null)
             return false;
-        if (!src.equals(that.src)) return false;
+        if (!mSrc.equals(that.mSrc)) return false;
 
         return true;
     }
@@ -194,23 +194,23 @@ public class GeneralAnimation {
     public int hashCode() {
         int result;
         long temp;
-        result = rows;
-        result = 31 * result + columns;
-        result = 31 * result + sprite.hashCode();
-        result = 31 * result + bulletSprite.hashCode();
-        result = 31 * result + src.hashCode();
-        result = 31 * result + dst.hashCode();
-        result = 31 * result + bmpRezolution.hashCode();
-        result = 31 * result + (spriteResolution != null ? spriteResolution.hashCode() : 0);
-        result = 31 * result + (spriteNormalResolution != null ? spriteNormalResolution.hashCode() : 0);
-        temp = Double.doubleToLongBits(angle);
+        result = mRows;
+        result = 31 * result + mColumns;
+        result = 31 * result + mSprite.hashCode();
+        result = 31 * result + mBulletSprite.hashCode();
+        result = 31 * result + mSrc.hashCode();
+        result = 31 * result + mDst.hashCode();
+        result = 31 * result + mBmpRezolution.hashCode();
+        result = 31 * result + (mSpriteResolution != null ? mSpriteResolution.hashCode() : 0);
+        result = 31 * result + (mSpriteNormalResolution != null ? mSpriteNormalResolution.hashCode() : 0);
+        temp = Double.doubleToLongBits(mAngle);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (int) forward;
-        result = 31 * result + (int) back;
-        result = 31 * result + (int) left;
-        result = 31 * result + (int) right;
-        result = 31 * result + (resultOfAnimMove ? 1 : 0);
-        result = 31 * result + (matrix != null ? matrix.hashCode() : 0);
+        result = 31 * result + (int) mForward;
+        result = 31 * result + (int) mBack;
+        result = 31 * result + (int) mLeft;
+        result = 31 * result + (int) mRight;
+        result = 31 * result + (mResultOfAnimMove ? 1 : 0);
+        result = 31 * result + (mMatrix != null ? mMatrix.hashCode() : 0);
         return result;
     }
 }

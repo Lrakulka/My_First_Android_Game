@@ -11,10 +11,10 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  * Created by KrabiySok on 1/13/2015.
  */
 public class AccelerationPresent extends Present {
-    private static final int ACCELERATION_TIME = 2000 / GameProcess.fps;
+    private static final int ACCELERATION_TIME = 2000 / GameProcess.FPS;
 
     public AccelerationPresent(int x, int y) {
-        super(BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
+        super(BitmapFactory.decodeResource(MainActivity.getMainActivity().getResources(),
                 R.drawable.acceleration_time_present), x, y);
     }
 

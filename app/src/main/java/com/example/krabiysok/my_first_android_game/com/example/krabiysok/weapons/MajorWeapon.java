@@ -1,9 +1,6 @@
 package com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapons;
 
-import android.graphics.BitmapFactory;
-
 import com.example.krabiysok.my_first_android_game.GameProcess;
-import com.example.krabiysok.my_first_android_game.MainActivity;
 import com.example.krabiysok.my_first_android_game.R;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.GeneralAnimation;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
@@ -14,11 +11,11 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  */
 public class MajorWeapon extends Weapon {
     public MajorWeapon() {
-        super(4000 / GameProcess.fps, 1000, R.drawable.major_weapon);
+        super(2000 / GameProcess.FPS, 1000, R.drawable.major_weapon);
     }
 
     @Override
-    public Bullet getBullet(int x, int y, GeneralAnimation bulletBelongs, double angle) {
+    public Bullet getBullet(int x, int y, GeneralAnimation bulletBelongs, float angle) {
         return new EnemieBullet(x, y, bulletBelongs, angle);
     }
 }

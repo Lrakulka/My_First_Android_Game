@@ -1,10 +1,6 @@
 package com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapons;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-
 import com.example.krabiysok.my_first_android_game.GameProcess;
-import com.example.krabiysok.my_first_android_game.MainActivity;
 import com.example.krabiysok.my_first_android_game.R;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.GeneralAnimation;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
@@ -15,11 +11,11 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  */
 public class SpecialWeapon extends Weapon {
     public SpecialWeapon() {
-        super(200 / GameProcess.fps, 40, R.drawable.special_weapon);
+        super(200 / GameProcess.FPS, 40, R.drawable.special_weapon);
     }
 
     @Override
-    public Bullet getBullet(int x, int y, GeneralAnimation bulletBelongs, double angle) {
+    public Bullet getBullet(int x, int y, GeneralAnimation bulletBelongs, float angle) {
         return new SpecialBullet(x, y, bulletBelongs, angle);
     }
 }

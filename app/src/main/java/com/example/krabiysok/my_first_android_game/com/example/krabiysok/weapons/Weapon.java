@@ -1,7 +1,5 @@
 package com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapons;
 
-import android.graphics.Bitmap;
-
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.GeneralAnimation;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
 
@@ -9,45 +7,45 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  * Created by KrabiySok on 1/11/2015.
  */
 public abstract class Weapon {
-    private int weaponImageID;
-    private int reloudTime, ammo;
-    public int bulletReloud;
+    private int mWeaponImageID;
+    private int mReloadTime, mAmmo;
+    public int mBulletReload;
 
     protected Weapon(int bulletReloud, int ammo, int weapon) {
-        this.bulletReloud = bulletReloud;
-        this.reloudTime = bulletReloud;
-        this.ammo = ammo;
-        this.weaponImageID = weapon;
+        mBulletReload = bulletReloud;
+        mReloadTime = bulletReloud;
+        mAmmo = ammo;
+        mWeaponImageID = weapon;
     }
 
-    public void startReloud() {
-        ammo--;
-        reloudTime = 0;
+    public void startReload() {
+        mAmmo--;
+        mReloadTime = 0;
     }
 
-    public void reloud() {
-        if (reloudTime < bulletReloud) {
-            reloudTime++;
+    public void reload() {
+        if (mReloadTime < mBulletReload) {
+            mReloadTime++;
         }
     }
 
     public int getWeapon() {
-        return weaponImageID;
+        return mWeaponImageID;
     }
 
-    public int getReloudTime() {
-        return reloudTime;
+    public int getReloadTime() {
+        return mReloadTime;
     }
 
     public int getAmmo() {
-        return ammo;
+        return mAmmo;
     }
 
     public abstract Bullet getBullet(int x, int y,
-                                     GeneralAnimation bulletBelongs, double angle);
+                                     GeneralAnimation bulletBelongs, float angle);
 
-    public int getBulletReloud() {
-        return bulletReloud;
+    public int getBulletReload() {
+        return mBulletReload;
     }
 
     @Override
@@ -57,20 +55,20 @@ public abstract class Weapon {
 
         Weapon weapon = (Weapon) o;
 
-        if (ammo != weapon.ammo) return false;
-        if (bulletReloud != weapon.bulletReloud) return false;
-        if (reloudTime != weapon.reloudTime) return false;
-        if (weaponImageID != weapon.weaponImageID) return false;
+        if (mAmmo != weapon.mAmmo) return false;
+        if (mBulletReload != weapon.mBulletReload) return false;
+        if (mReloadTime != weapon.mReloadTime) return false;
+        if (mWeaponImageID != weapon.mWeaponImageID) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = weaponImageID;
-        result = 31 * result + reloudTime;
-        result = 31 * result + ammo;
-        result = 31 * result + bulletReloud;
+        int result = mWeaponImageID;
+        result = 31 * result + mReloadTime;
+        result = 31 * result + mAmmo;
+        result = 31 * result + mBulletReload;
         return result;
     }
 }

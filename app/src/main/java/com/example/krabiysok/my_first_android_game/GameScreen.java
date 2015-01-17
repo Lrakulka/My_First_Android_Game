@@ -13,18 +13,18 @@ import android.view.SurfaceView;
  * Created by KrabiySok on 1/6/2015.
  */
 public class GameScreen {
-    public static int GAME_SCREEN_HEIGHT_MIN, GAME_SCREEN_HEIGHT_MAX;
-    private SurfaceView windowSurface;
-    private Context context;
-    private Bitmap backGround;
-    private static final Point windowSize = new Point();
+    private static final Point WINDOW_SIZE = new Point();
+    public static int sGameScreenHeightMin, sGameScreenHeightMax;
+    private SurfaceView mWindowSurface;
+    private Context mContext;
+    private Bitmap mBackGround;
 
     public GameScreen(final SurfaceView windowSurface, Context context) {
-        this.context = context;
-        this.windowSurface = windowSurface;
+        this.mContext = context;
+        this.mWindowSurface = windowSurface;
         // Just in case
-        windowSize.x = 800;
-        windowSize.y = 480;
+        WINDOW_SIZE.x = 800;
+        WINDOW_SIZE.y = 480;
         windowSurface.getHolder().addCallback(new SurfaceHolder.Callback() {
             public void surfaceDestroyed(SurfaceHolder holder) {
             }
@@ -32,10 +32,10 @@ public class GameScreen {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {
                 setBackGround(generateBackGround(R.drawable.back_ground));
-                windowSize.x = windowSurface.getWidth();
-                windowSize.y = windowSurface.getHeight();
-                GameScreen.GAME_SCREEN_HEIGHT_MAX = GameScreen.getWindowSize().y;
-                GameScreen.GAME_SCREEN_HEIGHT_MIN = (int) (GameScreen.getWindowSize().y * 0.25);
+                WINDOW_SIZE.x = windowSurface.getWidth();
+                WINDOW_SIZE.y = windowSurface.getHeight();
+                GameScreen.sGameScreenHeightMax = GameScreen.getWindowSize().y;
+                GameScreen.sGameScreenHeightMin = (int) (GameScreen.getWindowSize().y * 0.25);
                 draw(getCanvas());
             }
 
@@ -47,38 +47,39 @@ public class GameScreen {
     }
 
     public SurfaceView getsView() {
-        return windowSurface;
+        return mWindowSurface;
     }
 
     public Canvas getCanvas() {
-        Canvas canva = windowSurface.getHolder().lockCanvas();
-        if (canva != null) {
-            if (backGround != null)
-                canva.drawBitmap(backGround, null, new Rect(0, 0,
-                        windowSurface.getWidth(), windowSurface.getHeight()), null);
+        Canvas canvas = mWindowSurface.getHolder().lockCanvas();
+        if (canvas != null) {
+            if (mBackGround != null) {
+                canvas.drawBitmap(mBackGround, null, new Rect(0, 0,
+                        mWindowSurface.getWidth(), mWindowSurface.getHeight()), null);
+            }
         }
-        return canva;
+        return canvas;
     }
 
-    public Bitmap generateBackGround(int backGrounId) {
-        return BitmapFactory.decodeResource(context.getResources(), backGrounId);
+    public Bitmap generateBackGround(int backGroundId) {
+        return BitmapFactory.decodeResource(mContext.getResources(), backGroundId);
         //Need to write cicada method for generation unique background
     }
 
     public Bitmap getBackGround() {
-        return backGround;
+        return mBackGround;
     }
 
     public void setBackGround(Bitmap backGround) {
-        this.backGround = backGround;
+        this.mBackGround = backGround;
     }
 
-    public void draw(Canvas canva) {
-        if (canva != null)
-            windowSurface.getHolder().unlockCanvasAndPost(canva);
+    public void draw(Canvas canvas) {
+        if (canvas != null)
+            mWindowSurface.getHolder().unlockCanvasAndPost(canvas);
     }
 
     public static Point getWindowSize() {
-        return windowSize;
+        return WINDOW_SIZE;
     }
 }

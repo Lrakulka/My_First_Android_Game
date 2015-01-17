@@ -2,97 +2,90 @@ package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprite
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Point;
-import android.util.Log;
 
 import com.example.krabiysok.my_first_android_game.GameScreen;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.GeneralAnimation;
-import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.Player;
 
 /**
  * Created by KrabiySok on 1/11/2015.
  */
 public class Bullet extends GeneralAnimation {
-    private int damage, speed;
-    private double angle, moveAngle;
-    private GeneralAnimation bulletBelongs;
+    private static final float ANGLES_IN_RADIAN = 57.295779513082320876798154814105f;
+    private static final int BEYOND = 20; // Bullet going beyond game screen
+    private int mDamage, mSpeed;
+    private float mAngle, mMoveAngle;
+    private GeneralAnimation mBulletBelongs;
 
-    Bullet(int x, int y, int rows, int columns, Bitmap sprite, double spriteRatioHieght,
-           int damage, int speed, double angle, GeneralAnimation bulletBelongs) {
+    Bullet(int x, int y, int rows, int columns, Bitmap sprite, float spriteRatioHieght,
+           int damage, int speed, float angle, GeneralAnimation bulletBelongs) {
         super(x, y, rows, columns, sprite, spriteRatioHieght);
-        this.damage = damage;
-        this.speed = speed;
-        this.moveAngle = angle;
-        this.bulletBelongs = bulletBelongs;
+        mDamage = damage;
+        mSpeed = speed;
+        mMoveAngle = angle;
+        mBulletBelongs = bulletBelongs;
     }
 
     public int getDamage() {
-        return damage;
+        return mDamage;
     }
 
     public GeneralAnimation getBulletBelongs() {
-        return bulletBelongs;
+        return mBulletBelongs;
     }
 
-    //No bullet animation
-    // Rotate bullet from last raw.
+    // No mBullet animation
+    // Rotate mBullet from last raw.
     public boolean drawMove(Canvas canva) {
-        resultOfAnimMove = true;
-        if (moveAngle > Math.PI)
-            angle = PI360 - moveAngle;
-        else angle = moveAngle;
-        if (angle > PI90)
-            angle = Math.PI - angle;
-        newYPosition = (int) (speed * Math.cos(angle));
-        newXPosition = (int) (speed * Math.sin(angle));
+        mResultOfAnimMove = true;
+        if (mMoveAngle > Math.PI) mAngle = (float) (PI360 - mMoveAngle);
+        else mAngle = mMoveAngle;
+        if (mAngle > PI90) mAngle = (float) (Math.PI - mAngle);
+        mNewYPosition = (int) (mSpeed * Math.cos(mAngle));
+        mNewXPosition = (int) (mSpeed * Math.sin(mAngle));
 
-        if (moveAngle > angle315 || moveAngle <= angle45) {
-            position.y -= newYPosition;
-            position.x += moveAngle > angle315 ? -newXPosition : newXPosition;
+        if (mMoveAngle > ANGLE315 || mMoveAngle <= ANGLE45) {
+            mPosition.y -= mNewYPosition;
+            mPosition.x += mMoveAngle > ANGLE315 ? -mNewXPosition : mNewXPosition;
         }
-        else if (moveAngle > angle45 && moveAngle <= angle135) {
-            position.x += newXPosition;
-            position.y += moveAngle > PI90 ? newYPosition : -newYPosition;
+        else if (mMoveAngle > ANGLE45 && mMoveAngle <= ANGLE135) {
+            mPosition.x += mNewXPosition;
+            mPosition.y += mMoveAngle > PI90 ? mNewYPosition : -mNewYPosition;
         }
-        else if (moveAngle > angle135 && moveAngle <= angle225) {
-            position.y += newYPosition;
-            position.x += moveAngle > Math.PI ? -newXPosition : newXPosition;
+        else if (mMoveAngle > ANGLE135 && mMoveAngle <= ANGLE225) {
+            mPosition.y += mNewYPosition;
+            mPosition.x += mMoveAngle > Math.PI ? -mNewXPosition : mNewXPosition;
         }
-        else if (moveAngle > angle225 && moveAngle <= angle315) {
-            position.x -= newXPosition;
-            position.y += moveAngle > PI270 ? -newYPosition : newYPosition;
+        else if (mMoveAngle > ANGLE225 && mMoveAngle <= ANGLE315) {
+            mPosition.x -= mNewXPosition;
+            mPosition.y += mMoveAngle > PI270 ? -mNewYPosition : mNewYPosition;
         }
 
         // Protect from going beyond game screen
-        maxXAnimatPos = GameScreen.getWindowSize().x - this.spriteResolution.x;
-        if (position.x < minXAnimatPos - 20) {
-            resultOfAnimMove = false;
+        mMaxXAnimatPos = GameScreen.getWindowSize().x - this.mSpriteResolution.x;
+        if (mPosition.x < mMinXAnimatPos - BEYOND || mPosition.x > mMaxXAnimatPos + BEYOND ||
+                mPosition.y > GameScreen.getWindowSize().y + BEYOND ||
+                mPosition.y < mMinYAnimatPos) {
+            mResultOfAnimMove = false;
         }
-        if (position.x > maxXAnimatPos + 20) {
-            resultOfAnimMove = false;
-        }
-        if (position.y > GameScreen.getWindowSize().y + 20) {
-            resultOfAnimMove = false;
-        }
-        if (position.y < minYAnimatPos) {
-            resultOfAnimMove = false;
-        }
-        spriteResolution.x = (int) (spriteNormalResolution.x *
-                ((float) position.y / GameScreen.getWindowSize().y));
-        spriteResolution.y = (int) (spriteNormalResolution.y *
-                ((float)position.y / GameScreen.getWindowSize().y));
-        dst.set(position.x, position.y, position.x + (int) (spriteResolution.x ),
-                position.y + (int) (spriteResolution.y ));
+        mSpriteResolution.x = mSpriteNormalResolution.x *
+                mPosition.y / GameScreen.getWindowSize().y;
+        mSpriteResolution.y = mSpriteNormalResolution.y *
+                mPosition.y / GameScreen.getWindowSize().y;
+        mDst.set(mPosition.x, mPosition.y, mPosition.x + mSpriteResolution.x,
+                mPosition.y + mSpriteResolution.y);
 
-        matrix.setTranslate(dst.centerX(), dst.centerY());
-        matrix.preRotate((float) (moveAngle * 57.296));
-        // problem with height and weight == 0
-        if (bmpRezolution.x != 0 && bmpRezolution.y != 0)
-            bulletSprite = Bitmap.createBitmap(sprite, 0, bmpRezolution.y * (rows - 1),
-                bmpRezolution.x, bmpRezolution.y, matrix, true);
-        else bulletSprite = Bitmap.createBitmap(sprite, 0, bmpRezolution.y * (rows - 1),
-                1, 1, matrix, true);
-        canva.drawBitmap(bulletSprite, src, dst, null);
-        return resultOfAnimMove;
+        mMatrix.setTranslate(mDst.centerX(), mDst.centerY());
+        mMatrix.preRotate(mMoveAngle * ANGLES_IN_RADIAN);
+        // width and height must be > 0. Need to fix
+        try {
+            mBulletSprite = Bitmap.createBitmap(mSprite, 0, mBmpRezolution.y * (mRows - 1),
+                    mBmpRezolution.x, mBmpRezolution.y, mMatrix, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            mBulletSprite = Bitmap.createBitmap(mSprite, 0, mBmpRezolution.y * (mRows - 1),
+                    1, 1, mMatrix, true);
+        }
+        canva.drawBitmap(mBulletSprite, mSrc, mDst, null);
+        return mResultOfAnimMove;
     }
 }

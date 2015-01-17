@@ -1,6 +1,5 @@
 package com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.krabiysok.my_first_android_game.GameProcess;
@@ -13,12 +12,12 @@ import java.util.ArrayList;
 /**
  * Created by KrabiySok on 1/13/2015.
  */
-public class Major extends Enemie {
+public class Major extends Enemy {
     public Major(int x, int y) {
         super(x, y,
-                BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
-                        R.drawable.major), 100, (int) (300 / GameProcess.fps), 0, 0);
-        enemieBullets = new ArrayList<>();
-        weapon = new MajorWeapon();
+                BitmapFactory.decodeResource(MainActivity.getMainActivity().getResources(),
+                        R.drawable.major), 100, 100 / GameProcess.FPS, 0, 0);
+        mEnemyBullets = new ArrayList<>();
+        mWeapon = new MajorWeapon();
     }
 }

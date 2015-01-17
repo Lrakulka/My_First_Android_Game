@@ -12,36 +12,36 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  * Created by KrabiySok on 1/13/2015.
  */
 abstract public class Present {
-    private final static float RATIO = (float) (0.1);
-    private Bitmap image;
-    private Point size, position;
-    private Rect dst;
-    private int presentX0, presentX1, presentY0, presentY1, playerX0, playerX1, 
-            playerY0, playerY1;
+    private static final float RATIO = 0.1f;
+    private Bitmap mImage;
+    private Point mSize, mPosition;
+    private Rect mDst;
+    private int mPresentX0, mPresentX1, mPresentY0, mPresentY1, mPlayerX0, mPlayerX1,
+            mPlayerY0, mPlayerY1;
     Present(Bitmap image, int x, int y) {
-        this.image = image;
-        position = new Point(x, y);
+        mImage = image;
+        mPosition = new Point(x, y);
         float p = GameScreen.getWindowSize().y * RATIO;
-        size = new Point((int) ((image.getWidth() * p) / 
+        mSize = new Point((int) ((image.getWidth() * p) /
                 image.getHeight()), (int) p);
-        dst = new Rect(x, y, (int) (x + size.x * ((float) position.y /
-                        GameScreen.getWindowSize().y)), (int) (y + size.y *
-                ((float) position.y / GameScreen.getWindowSize().y)));
+        mDst = new Rect(x, y, (int) (x + mSize.x * mPosition.y /
+                        GameScreen.getWindowSize().y), (int) (y + mSize.y *
+                mPosition.y / GameScreen.getWindowSize().y));
     }
     
     public boolean takes(Player player) {
-        presentX0 = position.x;
-        presentY0 = position.y;
-        playerX0 = player.getPosition().x;
-        playerY0 = player.getPosition().y;
-        presentX1 = presentX0 + size.x;
-        presentY1 = presentY0 + size.y;
-        playerX1 = playerX0 + player.getSpriteResolution().x;
-        playerY1 = playerY0 + player.getSpriteResolution().y;
-        if ((playerX0 <= presentX0 && presentX0 <= playerX1 &&
-                playerY0 <= presentY0 && presentY0 <= playerY1) ||
-                (playerX0 <= presentX1 && presentX1 <= playerX1 &&
-                        playerY0 <= presentY1 && presentY1 <= playerY1)) {
+        mPresentX0 = mPosition.x;
+        mPresentY0 = mPosition.y;
+        mPlayerX0 = player.getPosition().x;
+        mPlayerY0 = player.getPosition().y;
+        mPresentX1 = mPresentX0 + mSize.x;
+        mPresentY1 = mPresentY0 + mSize.y;
+        mPlayerX1 = mPlayerX0 + player.getSpriteResolution().x;
+        mPlayerY1 = mPlayerY0 + player.getSpriteResolution().y;
+        if ((mPlayerX0 <= mPresentX0 && mPresentX0 <= mPlayerX1 &&
+                mPlayerY0 <= mPresentY0 && mPresentY0 <= mPlayerY1) ||
+                (mPlayerX0 <= mPresentX1 && mPresentX1 <= mPlayerX1 &&
+                        mPlayerY0 <= mPresentY1 && mPresentY1 <= mPlayerY1)) {
             presentForPlayer(player);
             return true;
         }
@@ -51,6 +51,6 @@ abstract public class Present {
     abstract protected void presentForPlayer(Player player);
     
     public void draw(Canvas canva) {
-        canva.drawBitmap(image, null, dst, null);
+        canva.drawBitmap(mImage, null, mDst, null);
     }
 }

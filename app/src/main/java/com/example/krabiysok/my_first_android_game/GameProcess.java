@@ -1,21 +1,23 @@
 package com.example.krabiysok.my_first_android_game;
 
-import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.Player;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.MrCat;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.com.example.krabiysok.presents.Present;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabisok.bullets.Bullet;
-import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Enemie;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Enemy;
 import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Major;
-import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Sucub;
-import com.example.krabiysok.my_first_android_game.com.example.krabiysok.weapons.SpecialWeapon;
+import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites.com.example.krabiysok.enemies.Succubus;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -25,126 +27,127 @@ import java.util.Random;
  * Created by KrabiySok on 1/10/2015.
  */
 public class GameProcess implements Runnable {
-    public static final int fps = 80; // Speed of updates
-    private static GameProcess gameProcess = new GameProcess();
-    private GameScreen gameScreen;
-    private Joystick joystick;
-    private boolean stop, sleepGame;
-    private Thread gameThread;
-    private Paint paint;
-    private int currentFPS;
-    private Player player;
-    private MyArrayList<Bullet> bullets;
-    private Bullet bullet;
-    private ArrayList<Enemie> enemies;
-    private Enemie enimie;
-    private MyArrayList<Present> presents;
-    private Present present;
-    private MrCat mrCat;
-    private Random random;
+    public static final int FPS = 50; // Speed of updates
+    private static GameProcess sGameProcess = new GameProcess();
+    private GameScreen mGameScreen;
+    private Joystick mJoystick;
+    private volatile boolean mStop, mSleepGame;
+    private Thread mGameThread;
+    private Paint mPaint;
+    private Player mPlayer;
+    private MyArrayList<Bullet> mBullets;
+    private ArrayList<Enemy> mEnemies;
+    private MrCat mMrCat;
+    private MyArrayList<Present> mPresents;
+    private int mCurrentFPS = FPS;
+    private Random mRandom;
+    private Message mMsg;
 
     private GameProcess() {
-        paint = new Paint();
-        paint.setColor(Color.RED);
-        paint.setTextSize(GameScreen.getWindowSize().y / 10);
+        mPaint = new Paint();
+        mPaint.setColor(Color.RED);
+        mPaint.setTextSize(GameScreen.getWindowSize().y / 10);
     }
 
     public static GameProcess getGameProcess() {
-        if (gameProcess.gameScreen != null)
-            return gameProcess;
+        if (sGameProcess.mGameScreen != null)
+            return sGameProcess;
         return null;
     }
 
     public static GameProcess getGameProcess(GameScreen gameScreen, Joystick joystick) {
-        if (gameProcess.gameScreen == null && gameScreen != null && joystick != null) {
-            gameProcess.gameScreen = gameScreen;
-            gameProcess.joystick = joystick;
-            gameProcess.gameThread = new Thread(gameProcess, "Game Thread");
-            gameProcess.gameThread.setDaemon(true);
+        if (sGameProcess.mGameScreen == null && gameScreen != null && joystick != null) {
+            sGameProcess.mGameScreen = gameScreen;
+            sGameProcess.mJoystick = joystick;
+            sGameProcess.mGameThread = new Thread(sGameProcess, "Game Thread");
+            sGameProcess.mGameThread.setDaemon(true);
         }
-        return gameProcess;
+        return sGameProcess;
     }
 
     @Override
     public void run() {
-        Canvas canva;
-        currentFPS = fps;
-        player = new Player(gameScreen.getWindowSize().x / 2,
-                gameScreen.getWindowSize().y / 2, joystick);
-        joystick.setPlayer(player);
-        bullets = new MyArrayList<>();
-        enemies = new ArrayList<>();
-        presents = new MyArrayList<>();
-        mrCat = new MrCat();
-        random = new Random();
-        int randomAbsInt, x, y;
-        while (!stop) {
+        Present present;
+        Enemy enemy;
+        Bullet bullet;
+        Canvas canvas;
+
+        mPlayer = new Player(mGameScreen.getWindowSize().x / 2,
+                mGameScreen.getWindowSize().y / 2, mJoystick);
+        mJoystick.setPlayer(mPlayer);
+        mBullets = new MyArrayList<>();
+        mEnemies = new ArrayList<>();
+        mPresents = new MyArrayList<>();
+        mMrCat = new MrCat();
+        mRandom = new Random();
+        int randomInt, x, y;
+
+        while (!mStop) {
             Log.d("LogApp", "game Go");
-            if (player.getScore100() > currentFPS)
-                currentFPS = fps - player.getScore100();
-            randomAbsInt = Math.abs(random.nextInt(1000));
-            if ((enemies.size() < 7) && (enemies.isEmpty() ||
-                    (randomAbsInt % fps) < player.getScore100())) {
-                x = randomAbsInt % 2 == 1 ? 0 : GameScreen.getWindowSize().x;
-                y = GameScreen.GAME_SCREEN_HEIGHT_MIN + randomAbsInt %
-                        (GameScreen.getWindowSize().y - GameScreen.GAME_SCREEN_HEIGHT_MIN);
-                switch (randomAbsInt % 3) {
+            if (mPlayer.getScore100() > mCurrentFPS)
+                mCurrentFPS = FPS - mPlayer.getScore100();
+            randomInt = mRandom.nextInt(1000);
+            if ((mEnemies.size() < 7) && (mEnemies.isEmpty() ||
+                    (randomInt % FPS) < mPlayer.getScore100())) {
+                x = randomInt % 2 == 1 ? 0 : GameScreen.getWindowSize().x;
+                y = GameScreen.sGameScreenHeightMin + randomInt %
+                        (GameScreen.getWindowSize().y - GameScreen.sGameScreenHeightMin);
+                switch (randomInt % 3) {
                     case 0: {
-                        enemies.add(new Major(x, y));
+                        mEnemies.add(new Major(x, y));
                         break;
                     }
                     case 1: {
-                        enemies.add(new Sucub(x, y));
+                        mEnemies.add(new Succubus(x, y));
                         break;
                     }
                     case 2: {
-                        enemies.add(new Sucub(x, y));
+                        mEnemies.add(new Succubus(x, y));
                         break;
                     }
                 }
             }
-            canva = gameScreen.getCanvas();
-            bullets.addAll(player.action(canva));
-            presents.add(mrCat.action(canva, randomAbsInt));
-            for(int i = 0; i < enemies.size(); ++i) {
-                enimie = enemies.get(i);
-                bullets.addAll(enimie.action(canva, player));
-                if (!enimie.isAlive(bullets, player)) {
-                    enemies.remove(i);
+            canvas = mGameScreen.getCanvas();
+            mBullets.addAll(mPlayer.action(canvas));
+            mPresents.add(mMrCat.action(canvas, randomInt));
+            for(int i = 0; i < mEnemies.size(); ++i) {
+                enemy = mEnemies.get(i);
+                mBullets.addAll(enemy.action(canvas, mPlayer));
+                if (!enemy.isAlive(mBullets, mPlayer)) {
+                    mEnemies.remove(i);
                     i--;
                 }
             }
-            for(int i = 0; i < presents.size(); ++i) {
-                present = presents.get(i);
-                if (present.takes(player)) {
-                    presents.remove(i);
+            for(int i = 0; i < mPresents.size(); ++i) {
+                present = mPresents.get(i);
+                if (present.takes(mPlayer)) {
+                    mPresents.remove(i);
                     i--;
                 }
-                else present.draw(canva);
+                else present.draw(canvas);
             }
-            for(int i = 0; i < bullets.size(); ++i) {
-                bullet = bullets.get(i);
-                if (!bullet.drawMove(canva)) {
-                    bullets.remove(i);
+            for(int i = 0; i < mBullets.size(); ++i) {
+                bullet = mBullets.get(i);
+                if (!bullet.drawMove(canvas)) {
+                    mBullets.remove(i);
                     i--;
                 }
             }
-            if (!player.isAlive(bullets)) {
-                canva.drawText("Game Over", (float) (GameScreen.getWindowSize().x / 2 -
-                                GameScreen.getWindowSize().x / 5),
-                        GameScreen.getWindowSize().y / 2, paint);
-                sleepGame(); //---
-                gameScreen.draw(canva);
-                MainActivity.getHandler().sendEmptyMessage(MainActivity.SET_BUTTONS_VISIBLE);
-            } else gameScreen.draw(canva);
+            if (!mPlayer.isAlive(mBullets)) {
+                playerDead(canvas);
+            }
+            mGameScreen.draw(canvas);
             try {
-                if (currentFPS < 20)
-                    Thread.sleep(30); // I did so specifically
-                else Thread.sleep(currentFPS);
-                if (sleepGame)
-                    synchronized (gameThread) {
-                        gameThread.wait();
+                if (mCurrentFPS < 20) {
+                    Thread.sleep(20); // I did so specifically
+                }
+                else Thread.sleep(mCurrentFPS);
+                if (mSleepGame) {
+
+                    synchronized (mGameThread) {
+                        mGameThread.wait();
                     }
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -152,35 +155,62 @@ public class GameProcess implements Runnable {
     }
 
     public void startGame() {
-        if (gameThread.getState() == Thread.State.NEW) {
-            stop = false;
-            gameThread.start();
-        } else if (sleepGame) {
-            sleepGame = false;
-            synchronized (gameThread) {
-                gameThread.notify();
+        if (mGameThread.getState() == Thread.State.NEW) {
+            mStop = false;
+            mGameThread.start();
+        } else if (mSleepGame) {
+            mSleepGame = false;
+            synchronized (mGameThread) {
+                mGameThread.notify();
             }
         }
     }
 
+    private void playerDead(Canvas canvas) {
+        SharedPreferences sPref;
+        SharedPreferences.Editor ed;
+        sPref = MainActivity.getMainActivity().getPreferences(
+                MainActivity.getMainActivity().MODE_PRIVATE);
+        int bestScore = sPref.getInt("BEST_SCORE", 0);
+        if ( mPlayer.getScore() > bestScore) {
+            bestScore = mPlayer.getScore();
+                ed = sPref.edit();
+            ed.putInt("BEST_SCORE", bestScore);
+            ed.commit();
+
+        }
+        mMsg = MainActivity.getHandler().
+                obtainMessage(MainActivity.SET_BEST_SCORE_VISIBLE, bestScore, 0);
+        MainActivity.getHandler().sendMessage(mMsg);
+        canvas.drawText("Game Over", (float) (GameScreen.getWindowSize().x / 2 -
+                        GameScreen.getWindowSize().x / 5),
+                GameScreen.getWindowSize().y / 2, mPaint);
+        sleepGame(); //---
+        MainActivity.getHandler().sendEmptyMessage(MainActivity.SET_BUTTONS_VISIBLE);
+    }
+
     public void sleepGame() {
-        sleepGame = true;
+        mSleepGame = true;
     }
 
     public void stopGame() {
-        stop = true;
+        mStop = true;
     }
 
     public void restart() {
-        currentFPS = fps;
-        player = new Player(gameScreen.getWindowSize().x / 2,
-                gameScreen.getWindowSize().y / 2, joystick);
-        joystick.setPlayer(player);
-        bullets = new MyArrayList<>();
-        enemies = new ArrayList<>();
-        presents = new MyArrayList<>();
-        mrCat = new MrCat();
-        random = new Random();
+        mCurrentFPS = FPS;
+        mPlayer = new Player(mGameScreen.getWindowSize().x / 2,
+                mGameScreen.getWindowSize().y / 2, mJoystick);
+        mJoystick.setPlayer(mPlayer);
+        mBullets = new MyArrayList<>();
+        mEnemies = new ArrayList<>();
+        mPresents = new MyArrayList<>();
+        mMrCat = new MrCat();
+        mRandom = new Random();
         this.startGame();
+    }
+
+    public boolean isGameSleep() {
+        return mSleepGame;
     }
 }

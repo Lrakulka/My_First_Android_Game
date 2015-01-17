@@ -19,140 +19,141 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  * Created by KrabiySok on 1/8/2015.
  */
 public class Joystick  {
-    private static final double PI2 = Math.PI * 2;
-    private LeftStick leftStick;
-    private Stick rightStick;
-    private SurfaceView rightStickSurfaceV, leftStickSurfaceV, aimFieldSrfaceV;
+    private LeftStick mLeftStick;
+    private Stick mRightStick;
+    private SurfaceView mRightStickSurfaceV, mLeftStickSurfaceV, mAimFieldSrfaceV;
 
     private class LeftStick extends Stick {
-        private SurfaceView aimField;
-        private Paint paintAim;
-        private Player player;
-        private Double newAimAngle;
-        private double aimAngle;
-        private float aimX, aimY, rAim, rAimDistance;
-        private Canvas aimFieldCanva;
+        private SurfaceView mAimField;
+        private Paint mPaintAim;
+        private Player mPlayer;
+        private float mAimX, mAimY, mRAim, mRAimDistance, mAimAngle;
+        private Float mNewAimAngle;
+        private Canvas mAimFieldCanvas;
 
         LeftStick(SurfaceView stickSurfaceView, SurfaceView aimField) {
             super(stickSurfaceView);
-            this.aimField = aimField;
+            mAimField = aimField;
             aimField.setZOrderOnTop(true);    // necessary
             aimField.getHolder().setFormat(PixelFormat.TRANSPARENT);
-            paintAim = new Paint(Paint.ANTI_ALIAS_FLAG);
-            paintAim.setColor(Color.RED);
-            paintAim.setAlpha(150);
-            paintAim.setStyle(Paint.Style.STROKE);
-            paintAim.setStrokeWidth(GameScreen.getWindowSize().y / 100);
-            rAimDistance = (int) (GameScreen.getWindowSize().y / 3);
-            rAim = (int) (GameScreen.getWindowSize().y / 70);
+            mPaintAim = new Paint(Paint.ANTI_ALIAS_FLAG);
+            mPaintAim.setColor(Color.RED);
+            mPaintAim.setAlpha(150);
+            mPaintAim.setStyle(Paint.Style.STROKE);
+            mPaintAim.setStrokeWidth(GameScreen.getWindowSize().y / 100);
+            mRAimDistance = (int) (GameScreen.getWindowSize().y / 3);
+            mRAim = (int) (GameScreen.getWindowSize().y / 70);
             drawAim(GameScreen.getWindowSize().x / 2,
-                    GameScreen.getWindowSize().y / 2 + rAimDistance);
+                    GameScreen.getWindowSize().y / 2 + mRAimDistance);
         }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (event != null && event.getAction() != MotionEvent.ACTION_UP &&
                     event.getAction() != MotionEvent.ACTION_CANCEL) {
-                xDotStick = event.getX();
-                yDotStick = event.getY();
-            } else xDotStick = yDotStick = null;
+                mXDotStick = event.getX();
+                mYDotStick = event.getY();
+            } else mXDotStick = mYDotStick = null;
             Integer stickInField = stickInField();
-            Canvas canva = stickSurfaceView.getHolder().lockCanvas();
+            Canvas canvas = mStickSurfaceView.getHolder().lockCanvas();
             // Clean canvas
-            canva.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            canva.drawCircle(x, y, rBig, paint);
-            canva.drawCircle(x, y, jumpR, paint);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            canvas.drawCircle(mX, mY, mRBig, mPaint);
+            canvas.drawCircle(mX, mY, mJumpR, mPaint);
             if (stickInField == null || stickInField == -1) {
-                canva.drawCircle(x, y, rSmall, paint);
-                xDotStick = yDotStick = null;
+                canvas.drawCircle(mX, mY, mRSmall, mPaint);
+                mXDotStick = mYDotStick = null;
             }
             else {
-                Float xDot = xDotStick, yDot = yDotStick;
+                Float xDot = mXDotStick, yDot = mYDotStick;
                 if (stickInField == 1) {
-                    float dist = (float) (Math.pow(Math.pow(xDotStick - x, 2) +
-                            Math.pow(yDotStick - y, 2), 0.5));
-                    xDot = x + maxDotDistance * (xDotStick - x ) / dist;
-                    yDot = y + maxDotDistance * (yDotStick - y ) / dist;
+                    float dist = (float) (Math.pow(Math.pow(mXDotStick - mX, 2) +
+                            Math.pow(mYDotStick - mY, 2), 0.5));
+                    xDot = mX + mMaxDotDistance * (mXDotStick - mX) / dist;
+                    yDot = mY + mMaxDotDistance * (mYDotStick - mY) / dist;
                 }
-                canva.drawCircle(xDot, yDot, rSmall, paint);
+                canvas.drawCircle(xDot, yDot, mRSmall, mPaint);
 
             }
-            paint.setPathEffect(dashPath);
-            canva.drawCircle(x, y, specialR, paint);
-            paint.setPathEffect(null);
-            stickSurfaceView.getHolder().unlockCanvasAndPost(canva);
+            mPaint.setPathEffect(mDashPath);
+            canvas.drawCircle(mX, mY, mSpecialR, mPaint);
+            mPaint.setPathEffect(null);
+            mStickSurfaceView.getHolder().unlockCanvasAndPost(canvas);
             moveAim();
             return true;
         }
 
         private void moveAim() {
-            if (player != null) {
-                if((newAimAngle = this.getDirectionStick()) != null)
-                    aimAngle = newAimAngle;
-                aimX = (int) (player.getPosition().x + (Math.cos(aimAngle -
-                        GeneralAnimation.PI90) * rAimDistance) +
-                        player.getSpriteResolution().x / 2);
-                aimY = (int) (player.getPosition().y + (Math.sin(aimAngle -
-                        GeneralAnimation.PI90) *  rAimDistance) +
-                        player.getSpriteResolution().y / 2);
-                drawAim(aimX, aimY);
+            if (mPlayer != null) {
+                if((mNewAimAngle = getDirectionStick()) != null)
+                    mAimAngle = mNewAimAngle;
+                mAimX = (int) (mPlayer.getPosition().x + (Math.cos(mAimAngle -
+                        GeneralAnimation.PI90) * mRAimDistance) +
+                        mPlayer.getSpriteResolution().x / 2);
+                mAimY = (int) (mPlayer.getPosition().y + (Math.sin(mAimAngle -
+                        GeneralAnimation.PI90) * mRAimDistance) +
+                        mPlayer.getSpriteResolution().y / 2);
+                drawAim(mAimX, mAimY);
             }
         }
         private void drawAim(float aimX, float aimY) {
-            aimFieldCanva = aimField.getHolder().lockCanvas();
-            if (aimFieldCanva != null) {
-                aimFieldCanva.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-               // aimFieldCanva.drawCircle(aimX, aimY, rAim, paintAim);
-                aimFieldCanva.drawCircle(aimX, aimY, rAim, paintAim);
-                aimField.getHolder().unlockCanvasAndPost(aimFieldCanva);
+            mAimFieldCanvas = mAimField.getHolder().lockCanvas();
+            if (mAimFieldCanvas != null) {
+                mAimFieldCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+                mAimFieldCanvas.drawCircle(aimX, aimY, mRAim, mPaintAim);
+                mAimField.getHolder().unlockCanvasAndPost(mAimFieldCanvas);
             }
         }
 
         public void setPlayer(Player player) {
-            this.player = player;
+            this.mPlayer = player;
         }
     }
 
     private class Stick implements View.OnTouchListener {
-        protected Paint paint;
-        protected Float xDotStick, yDotStick; // Small circke I cold dot
+        protected Paint mPaint;
+        protected Float mXDotStick, mYDotStick; // Small circke I cold dot
         // Joystick circle radius
-        protected float rBig, rSmall, specialR, jumpR, maxDotDistance;
-        protected float rBigD, jumpRD; // rBigD = rBig^2; jumpRD = jumpR^2
-        protected float x, y;
-        protected DashPathEffect dashPath;
-        protected SurfaceView stickSurfaceView;
+        protected float mRBig, mRSmall, mSpecialR, mJumpR, mMaxDotDistance;
+        protected float mRBigD, mJumpRD; // mRBigD = mRBig^2; mJumpRD =
+                                        // (stickSurfaceView.getLayoutParams().height / 2)^2
+        protected float mX, mY;
+        protected DashPathEffect mDashPath;
+        protected SurfaceView mStickSurfaceView;
 
         Stick(final SurfaceView stickSurfaceView) {
             // Make surfaceView transparent
-            this.stickSurfaceView = stickSurfaceView;
+            this.mStickSurfaceView = stickSurfaceView;
             stickSurfaceView.setZOrderOnTop(true);    // necessary
             stickSurfaceView.getHolder().setFormat(PixelFormat.TRANSPARENT);
-
             stickSurfaceView.getHolder().addCallback(new SurfaceHolder.Callback() {
 
                 @Override
                 public void surfaceCreated(SurfaceHolder holder) {
-                    if (GameScreen.getWindowSize().y > 0)
+                    if (GameScreen.getWindowSize().y > 0) {
                         stickSurfaceView.getLayoutParams().height =
-                            stickSurfaceView.getLayoutParams().width = (int)
-                                   (GameScreen.getWindowSize().y / 2.8);
-                    else stickSurfaceView.getLayoutParams().height =
-                            stickSurfaceView.getLayoutParams().width = 200;
-                    paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                    paint.setColor(Color.BLUE);
-                    paint.setAlpha(150);
-                    paint.setStyle(Paint.Style.STROKE);
-                    paint.setStrokeWidth(stickSurfaceView.getLayoutParams().height / 40);
-                    dashPath = new DashPathEffect(new float[] { 5, 10, 5, 5 }, 1);
-                    x = y = jumpR = stickSurfaceView.getLayoutParams().height / 2;
-                    jumpR -= paint.getStrokeWidth() / 2;
-                    rBig = (float) (jumpR / 2); // 1.8
-                    rSmall = (float) (rBig / 2.5);
-                    specialR = (float)(rBig - paint.getStrokeWidth() / 1.5);
-                    maxDotDistance = (float) (rBig * 0.8);
-                    rBigD = rBig * rBig;
-                    jumpRD = jumpR * jumpR;
+                                stickSurfaceView.getLayoutParams().width =
+                                        (int) (GameScreen.getWindowSize().y / 2);
+                    }
+                    else {
+                        stickSurfaceView.getLayoutParams().height =
+                                stickSurfaceView.getLayoutParams().width = 200;
+                    }
+                    mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                    mPaint.setColor(Color.BLUE);
+                    mPaint.setAlpha(100);
+                    mPaint.setStyle(Paint.Style.STROKE);
+                    mPaint.setStrokeWidth(stickSurfaceView.getLayoutParams().height / 40);
+                    mDashPath = new DashPathEffect(new float[] { 5, 10, 5, 5 }, 1);
+                    mX = mY = mJumpRD = stickSurfaceView.getLayoutParams().height / 2;
+                    mJumpR = mJumpRD / 1.8f;
+                    mJumpRD *= mJumpRD;
+                    mJumpR -= mPaint.getStrokeWidth() / 2;
+                    mRBig = mJumpR / 1.5f;
+                    mRSmall = mRBig / 2.5f;
+                    mSpecialR = mRBig - mPaint.getStrokeWidth() / 1.5f;
+                    mMaxDotDistance = mRBig * 0.8f;
+                    mRBigD = mRBig * mRBig;
                     onTouch(null, null);
                 }
 
@@ -174,127 +175,125 @@ public class Joystick  {
         public boolean onTouch(View v, MotionEvent event) {
             if (event != null && event.getAction() != MotionEvent.ACTION_UP &&
                     event.getAction() != MotionEvent.ACTION_CANCEL) {
-                xDotStick = event.getX();
-                yDotStick = event.getY();
-            } else xDotStick = yDotStick = null;
+                mXDotStick = event.getX();
+                mYDotStick = event.getY();
+            } else mXDotStick = mYDotStick = null;
             Integer stickInField = stickInField();
-            Canvas canva = stickSurfaceView.getHolder().lockCanvas();
+            Canvas canvas = mStickSurfaceView.getHolder().lockCanvas();
             // Clean canvas
-            canva.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-            canva.drawCircle(x, y, rBig, paint);
-            canva.drawCircle(x, y, jumpR, paint);
+            canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+            canvas.drawCircle(mX, mY, mRBig, mPaint);
+            canvas.drawCircle(mX, mY, mJumpR, mPaint);
             if (stickInField == null || stickInField == -1) {
-                canva.drawCircle(x, y, rSmall, paint);
-                xDotStick = yDotStick = null;
+                canvas.drawCircle(mX, mY, mRSmall, mPaint);
+                mXDotStick = mYDotStick = null;
             }
             else {
-                Float xDot = xDotStick, yDot = yDotStick;
+                Float xDot = mXDotStick, yDot = mYDotStick;
                 if (stickInField == 1) {
-                    float dist = (float) (Math.pow(Math.pow(xDotStick - x, 2) +
-                            Math.pow(yDotStick - y, 2), 0.5));
-                    xDot = x + maxDotDistance * (xDotStick - x ) / dist;
-                    yDot = y + maxDotDistance * (yDotStick - y ) / dist;
+                    float dist = (float) (Math.pow(Math.pow(mXDotStick - mX, 2) +
+                            Math.pow(mYDotStick - mY, 2), 0.5));
+                    xDot = mX + mMaxDotDistance * (mXDotStick - mX) / dist;
+                    yDot = mY + mMaxDotDistance * (mYDotStick - mY) / dist;
                 }
-                canva.drawCircle(xDot, yDot, rSmall, paint);
-
+                canvas.drawCircle(xDot, yDot, mRSmall, mPaint);
             }
-            paint.setPathEffect(dashPath);
-            canva.drawCircle(x, y, specialR, paint);
-            paint.setPathEffect(null);
-            stickSurfaceView.getHolder().unlockCanvasAndPost(canva);
+            mPaint.setPathEffect(mDashPath);
+            canvas.drawCircle(mX, mY, mSpecialR, mPaint);
+            mPaint.setPathEffect(null);
+            mStickSurfaceView.getHolder().unlockCanvasAndPost(canvas);
             return true;
         }
 
         //-1 dot is not in circle 0 in circle 1 on circle
         public synchronized Integer stickInField() {
-            if (xDotStick == null || yDotStick == null)
+            if (mXDotStick == null || mYDotStick == null)
                 return null;
             // Exception NullPointer ? Bad synchronization?
             float pos;
             try {
-                pos = (x - xDotStick) * (x - xDotStick) + (y - yDotStick) *
-                        (y - yDotStick);
+                pos = (mX - mXDotStick) * (mX - mXDotStick) + (mY - mYDotStick) *
+                        (mY - mYDotStick);
             } catch (Exception e) {
                 e.printStackTrace();
                 return 0;
             }
-            if (pos < rBigD)
+            if (pos < mRBigD)
                 return 0;
-            if (pos < jumpRD)
+            if (pos < mJumpRD)
                 return 1;
             return -1;
         }
 
-        public Double getDirectionStick() {
-            if (xDotStick == null || yDotStick == null)
+        public Float getDirectionStick() {
+            if (mXDotStick == null || mYDotStick == null)
                 return null;
             double a, c, result;
             // Exception NullPointer ?
             try {
-                a = Math.pow(Math.pow(x - xDotStick, 2) + Math.pow(y - yDotStick, 2), 0.5);
-                c = Math.pow(Math.pow(x - xDotStick, 2) + Math.pow(y - rBig - yDotStick, 2), 0.5);
-                result = xDotStick < x ? PI2 - Math.acos((a * a + rBig * rBig -
-                        c * c) / (2 * a * rBig)) : Math.acos((a * a + rBig * rBig - c * c) /
-                        (2 * a * rBig));
+                a = Math.pow(Math.pow(mX - mXDotStick, 2) + Math.pow(mY - mYDotStick, 2), 0.5);
+                c = Math.pow(Math.pow(mX - mXDotStick, 2) + Math.pow(mY - mRBig - mYDotStick, 2), 0.5);
+                result = mXDotStick < mX ? GeneralAnimation.FLOAT_PI2 -
+                        Math.acos((a * a + mRBig * mRBig - c * c) / (2 * a * mRBig)) :
+                        Math.acos((a * a + mRBig * mRBig - c * c) / (2 * a * mRBig));
             } catch (Exception e) {
                 e.printStackTrace();
                 return null;
             }
-            return result;
+            return (float) result;
         }
 
         public void cleanStickPosition() {
-            xDotStick = yDotStick = null;
+            mXDotStick = mYDotStick = null;
         }
 
     }
 
     Joystick(SurfaceView rightStickSurfaceV, SurfaceView leftStickSurfaceV,
              SurfaceView aimFieldSrfaceV) {
-        this.leftStickSurfaceV = leftStickSurfaceV;
-        this.rightStickSurfaceV = rightStickSurfaceV;
-        this.aimFieldSrfaceV = aimFieldSrfaceV;
+        mLeftStickSurfaceV = leftStickSurfaceV;
+        mRightStickSurfaceV = rightStickSurfaceV;
+        mAimFieldSrfaceV = aimFieldSrfaceV;
         if (leftStickSurfaceV != null) {
-            leftStick = new LeftStick(leftStickSurfaceV, aimFieldSrfaceV);
-            leftStickSurfaceV.setOnTouchListener(leftStick);
+            mLeftStick = new LeftStick(leftStickSurfaceV, aimFieldSrfaceV);
+            leftStickSurfaceV.setOnTouchListener(mLeftStick);
         }
         if (rightStickSurfaceV != null) {
-            rightStick = new Stick(rightStickSurfaceV);
-            rightStickSurfaceV.setOnTouchListener(rightStick);
+            mRightStick = new Stick(rightStickSurfaceV);
+            rightStickSurfaceV.setOnTouchListener(mRightStick);
         }
     }
 
-    public Double getDirectionStick() {
-        return rightStick.getDirectionStick();
+    public Float getDirectionStick() {
+        return mRightStick.getDirectionStick();
     }
 
     public Integer stickInField() {
-        return rightStick.stickInField();
+        return mRightStick.stickInField();
     }
 
-    public Double getAimAngle() {
-        return leftStick.getDirectionStick();
+    public Float getAimAngle() {
+        return mLeftStick.getDirectionStick();
     }
 
     public Integer isAimFire() {
-        leftStick.moveAim();
-        return leftStick.stickInField();
+        mLeftStick.moveAim();
+        return mLeftStick.stickInField();
     }
 
-    public static Double getAngleBetween(Point src, Point target) {
-        if (target == null || src == null)
-            return null;
+    public static Float getAngleBetween(Point src, Point target) {
+        if (target == null || src == null) return null;
         double a = Math.pow(Math.pow(src.x - target.x, 2) +
                 Math.pow(src.y - target.y, 2), 0.5),
                 c = Math.pow(Math.pow(src.x - target.x, 2) + Math.pow(src.y -
                         10 - target.y, 2), 0.5);
-        Double result = target.x < src.x ? PI2 - Math.acos((a * a + 10 * 10 -
-                c * c) / (2 * a * 10)) : Math.acos((a * a + 10 * 10 - c * c) /
-                (2 * a * 10));
-        return result;
+        Double result = target.x < src.x ? GeneralAnimation.FLOAT_PI2 -
+                Math.acos((a * a + 10 * 10 - c * c) / (2 * a * 10)) :
+                Math.acos((a * a + 10 * 10 - c * c) / (2 * a * 10));
+        return result.floatValue();
     }
 
     public void setPlayer(Player player) {
-        leftStick.setPlayer(player);
+        mLeftStick.setPlayer(player);
     }
 }

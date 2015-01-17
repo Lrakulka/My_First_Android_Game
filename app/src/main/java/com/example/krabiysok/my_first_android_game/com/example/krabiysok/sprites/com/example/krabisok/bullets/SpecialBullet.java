@@ -11,10 +11,10 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  * Created by KrabiySok on 1/11/2015.
  */
 public class SpecialBullet extends Bullet {
-    public SpecialBullet(int x, int y, GeneralAnimation bulletBelongs, double angle) {
+    public SpecialBullet(int x, int y, GeneralAnimation bulletBelongs, float angle) {
         super(x, y, 4, 4,
-                BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
-                        R.drawable.special_bullet), 0.1, 30, 1900 / GameProcess.fps,
+                BitmapFactory.decodeResource(MainActivity.getMainActivity().getResources(),
+                        R.drawable.special_bullet), 0.1f, 30, 1400 / GameProcess.FPS,
                 angle, bulletBelongs);
     }
 }

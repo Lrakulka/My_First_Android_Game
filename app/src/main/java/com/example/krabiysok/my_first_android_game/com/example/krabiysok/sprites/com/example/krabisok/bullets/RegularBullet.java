@@ -12,10 +12,10 @@ import com.example.krabiysok.my_first_android_game.com.example.krabiysok.sprites
  */
 public class RegularBullet extends Bullet {
 
-    public RegularBullet(int x, int y, GeneralAnimation bulletBelongs, double angle) {
+    public RegularBullet(int x, int y, GeneralAnimation bulletBelongs, float angle) {
         super(x, y, 4, 4,
-                BitmapFactory.decodeResource(MainActivity.getContext().getResources(),
-                        R.drawable.regular_bullet), 0.15, 20, 1500 / GameProcess.fps,
+                BitmapFactory.decodeResource(MainActivity.getMainActivity().getResources(),
+                        R.drawable.regular_bullet), 0.15f, 20, 1000 / GameProcess.FPS,
                 angle, bulletBelongs);
     }
 }
