@@ -6,10 +6,10 @@ android {
 
     defaultConfig {
         applicationId "com.example.krabiysok.my_first_android_game"
-        minSdkVersion 14
+        minSdkVersion 7
         targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "1.0.1"
     }
     buildTypes {
         release {

@@ -45,6 +45,8 @@ public class GameProcess implements Runnable {
 
     private GameProcess() {
         mPaint = new Paint();
+        mPaint.setSubpixelText(true);
+        mPaint.setAntiAlias(true);
         mPaint.setColor(Color.RED);
         mPaint.setTextSize(GameScreen.getWindowSize().y / 10);
     }
@@ -193,7 +195,7 @@ public class GameProcess implements Runnable {
                 obtainMessage(MainActivity.SET_BEST_SCORE_VISIBLE, bestScore, 0);
         MainActivity.getHandler().sendMessage(mMsg);
         canvas.drawText("Game Over", (float) (GameScreen.getWindowSize().x / 2 -
-                        GameScreen.getWindowSize().x / 5),
+                        GameScreen.getWindowSize().x / 7),
                 GameScreen.getWindowSize().y / 2, mPaint);
         sleepGame(); //---
         MainActivity.getHandler().sendEmptyMessage(MainActivity.SET_BUTTONS_VISIBLE);

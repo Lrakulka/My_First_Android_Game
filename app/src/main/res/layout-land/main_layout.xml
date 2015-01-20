@@ -169,10 +169,9 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/best_score"
-        android:layout_alignBaseline="@+id/joystickRight"
-        android:layout_alignBottom="@+id/joystickRight"
         android:layout_centerHorizontal="true"
         android:textColor="#ff0bff48"
-        android:visibility="gone" />
+        android:visibility="gone"
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

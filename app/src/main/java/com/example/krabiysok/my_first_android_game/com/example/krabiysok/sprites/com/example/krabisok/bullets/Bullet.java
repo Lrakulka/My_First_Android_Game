@@ -83,7 +83,8 @@ public class Bullet extends GeneralAnimation {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        canva.drawBitmap(mBulletSprite, mSrc, mDst, null);
+        if (mBulletSprite != null)
+            canva.drawBitmap(mBulletSprite, mSrc, mDst, null);
         return mResultOfAnimMove;
     }
 }
